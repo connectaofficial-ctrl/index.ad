@@ -306,6 +306,25 @@
     .todo-item-actions{display:flex;gap:4px;margin-top:6px;}
     .survey-send-card{background:linear-gradient(135deg,rgba(244,184,203,.1),rgba(42,74,127,.06));border:1px solid rgba(244,184,203,.3);border-radius:var(--rs);padding:16px;margin-bottom:16px;}
     .survey-send-card h4{font-size:.875rem;font-weight:700;color:var(--ai);margin-bottom:8px;}
+
+    /* PREP MODEL */
+    .prepmodel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+    .prepmodel-card{background:#fff;border-radius:var(--rs);border:1px solid var(--border);border-left:4px solid var(--natsu);padding:16px;box-shadow:var(--shadow);transition:all .2s;}
+    .prepmodel-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+    .prepmodel-card-name{font-family:'Zen Old Mincho',serif;font-weight:700;font-size:.95rem;color:var(--ai);margin-bottom:4px;}
+    .prepmodel-card-desc{font-size:.78rem;color:var(--ai-soft);margin-bottom:10px;}
+    .prepmodel-task-preview{font-size:.75rem;color:var(--ai-soft);line-height:1.8;margin-bottom:10px;border-top:1px solid var(--shiro-2);padding-top:8px;}
+    .prepmodel-actions{display:flex;gap:6px;}
+    .task-row{display:grid;grid-template-columns:1fr 80px 100px 32px;gap:6px;align-items:center;background:var(--shiro-2);border-radius:var(--rs);padding:7px 10px;}
+
+    /* EVENT MODEL */
+    .emodel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
+    .emodel-card{background:#fff;border-radius:var(--rs);border:1px solid var(--border);border-top:3px solid var(--natsu);padding:16px;box-shadow:var(--shadow);position:relative;transition:all .2s;}
+    .emodel-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+    .emodel-card-name{font-family:'Zen Old Mincho',serif;font-weight:700;font-size:.95rem;color:var(--ai);margin-bottom:6px;}
+    .emodel-card-meta{font-size:.78rem;color:var(--ai-soft);line-height:1.8;}
+    .emodel-card-actions{display:flex;gap:6px;margin-top:10px;}
+    .emodel-tag{display:inline-block;padding:2px 8px;border-radius:99px;font-size:.68rem;font-weight:600;background:rgba(123,94,167,.1);color:var(--natsu);margin-bottom:6px;}
     @media(max-width:768px){
       .layout{flex-direction:column;}
       .admin-sidebar{display:flex;overflow-x:auto;height:auto;padding:4px 0;}
@@ -377,10 +396,21 @@
         <div id="dashboard-area"><div class="spinner"></div></div>
       </section>
 
-      <!-- ✅ FIX 1: 余分な </div> を削除 -->
       <section id="tab-events" class="tab-section" style="display:none;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;"><div class="section-title" style="margin-bottom:0;border:none;padding:0;">イベント管理</div><div style="display:flex;gap:8px;"><span id="events-updated" style="font-size:.72rem;color:var(--ai-soft);align-self:center;"></span><button class="btn btn-outline btn-sm" onclick="loadEvents();document.getElementById('events-updated').textContent='更新: '+new Date().toLocaleTimeString()">更新</button><button class="btn btn-ai" onclick="openCreateEventModal()">＋ 新規作成</button></div></div>
         <div id="events-area"><div class="spinner"></div></div>
+
+        <!-- 準備モデル管理 -->
+        <div style="margin-top:32px;padding-top:24px;border-top:2px solid var(--shiro-2);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div>
+              <div style="font-family:'Zen Old Mincho',serif;font-size:.95rem;font-weight:700;color:var(--ai);">準備モデル</div>
+              <div style="font-size:.75rem;color:var(--ai-soft);margin-top:2px;">イベント作成時に選択するとTodoに準備タスクが自動追加されます</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="openPrepModelModal()">＋ モデル追加</button>
+          </div>
+          <div id="prepmodel-area"></div>
+        </div>
       </section>
 
       <section id="tab-qrscan" class="tab-section" style="display:none;">
@@ -535,6 +565,10 @@
             <button class="btn btn-ai" onclick="openTodoModal()">＋ 追加</button>
           </div>
         </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
+          <select id="todo-event-filter" class="form-control" style="max-width:260px;" onchange="loadTodo()"><option value="">すべてのTodo</option></select>
+          <button class="btn btn-outline btn-sm" onclick="openApplyPrepModelModal()">📋 準備モデルを追加</button>
+        </div>
         <div class="todo-board" id="todo-board">
           <div class="todo-col">
             <div class="todo-col-title">未着手 <span class="todo-col-count" id="tc-todo">0</span></div>
@@ -562,6 +596,7 @@
   <div class="modal-box">
     <div class="modal-header"><div class="modal-title" id="event-modal-title">イベント作成</div><button class="modal-close" onclick="closeEventModal()">×</button></div>
     <div id="event-modal-alert"></div>
+    <div class="form-group" id="f-model-row"><label class="form-label">準備モデル <span style="font-weight:400;color:var(--ai-soft);">（任意）選択するとTodoに準備タスクを自動追加</span></label><select id="f-model" class="form-control"><option value="">モデルを選択しない</option></select></div>
     <div class="form-group"><label class="form-label">イベント名</label><input id="f-name" class="form-control" type="text"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
       <div class="form-group"><label class="form-label">開催日時</label><input id="f-date" class="form-control" type="datetime-local"></div>
@@ -574,6 +609,40 @@
     </div>
     <div class="form-group" id="event-status-row" style="display:none;"><label class="form-label">ステータス</label><select id="f-status" class="form-control"><option value="OPEN">受付中</option><option value="CLOSED">終了</option></select></div>
     <div style="display:flex;gap:8px;margin-top:4px;"><button class="btn btn-ai" style="flex:1;" onclick="saveEvent()" id="event-save-btn">保存</button><button class="btn btn-outline" onclick="closeEventModal()">キャンセル</button></div>
+  </div>
+</div>
+
+<!-- PREP MODEL MODAL -->
+<div class="modal-overlay" id="prepmodel-modal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header"><div class="modal-title" id="prepmodel-modal-title">準備モデル 作成</div><button class="modal-close" onclick="closeModal('prepmodel-modal')">×</button></div>
+    <div id="prepmodel-modal-alert"></div>
+    <div class="form-group"><label class="form-label">モデル名</label><input id="pm-name" class="form-control" type="text" placeholder="例：交流会標準モデル、大型パーティーモデル"></div>
+    <div class="form-group"><label class="form-label">説明（任意）</label><input id="pm-desc" class="form-control" type="text" placeholder="例：30名規模の交流会向け準備タスク"></div>
+    <div style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:.82rem;font-weight:700;color:var(--ai);">準備タスク一覧</div>
+      <button class="btn btn-outline btn-sm" onclick="addPrepTaskRow()">＋ タスク追加</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 80px 100px 32px;gap:6px;margin-bottom:4px;padding:0 2px;">
+      <div style="font-size:.7rem;color:var(--ai-soft);font-weight:600;">タスク名</div>
+      <div style="font-size:.7rem;color:var(--ai-soft);font-weight:600;">優先度</div>
+      <div style="font-size:.7rem;color:var(--ai-soft);font-weight:600;">担当者</div>
+      <div></div>
+    </div>
+    <div id="pm-tasks-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;max-height:300px;overflow-y:auto;padding-right:4px;"></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-ai" style="flex:1;" onclick="savePrepModel()" id="prepmodel-save-btn">保存</button><button class="btn btn-outline" onclick="closeModal('prepmodel-modal')">キャンセル</button></div>
+  </div>
+</div>
+
+<!-- APPLY PREP MODEL MODAL -->
+<div class="modal-overlay" id="apply-prepmodel-modal">
+  <div class="modal-box">
+    <div class="modal-header"><div class="modal-title">準備モデルを適用</div><button class="modal-close" onclick="closeModal('apply-prepmodel-modal')">×</button></div>
+    <p style="font-size:.82rem;color:var(--ai-soft);margin-bottom:14px;">選択したイベントのTodoリストにモデルのタスクが追加されます。</p>
+    <div class="form-group"><label class="form-label">対象イベント</label><select id="apm-event-sel" class="form-control"></select></div>
+    <div class="form-group"><label class="form-label">準備モデル</label><select id="apm-model-sel" class="form-control" onchange="showApplyPreview()"></select></div>
+    <div id="apm-preview" style="margin-bottom:14px;"></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-ai" style="flex:1;" onclick="doApplyPrepModel()">適用する</button><button class="btn btn-outline" onclick="closeModal('apply-prepmodel-modal')">キャンセル</button></div>
   </div>
 </div>
 
@@ -679,6 +748,7 @@
     </div>
     <div class="form-group"><label class="form-label">担当者（任意）</label><input id="todo-assignee" class="form-control" type="text" placeholder="山田"></div>
     <div class="form-group"><label class="form-label">メモ（任意）</label><textarea id="todo-memo" class="form-control" rows="2" style="resize:none;" placeholder="詳細メモ"></textarea></div>
+    <div class="form-group"><label class="form-label">イベント紐づけ（任意）</label><select id="todo-event-link" class="form-control"><option value="">紐づけなし</option></select></div>
     <div class="form-group"><label class="form-label">ステータス</label>
       <select id="todo-status-input" class="form-control"><option value="todo">未着手</option><option value="doing">進行中</option><option value="done">完了</option></select>
     </div>
@@ -754,7 +824,7 @@ function switchTab(tab){
   activeEl.classList.add('active');
   activeEl.style.display='block';
   document.querySelectorAll('.admin-sidebar__item').forEach(el=>{if(el.getAttribute('onclick')==="switchTab('"+tab+"')")el.classList.add('active');});
-  const loaders={dashboard:loadDashboard,events:loadEvents,qrscan:()=>{startPolling();loadScanLogs();},registrations:()=>{loadEventFilterOptions();loadRegistrations();},participants:()=>searchParticipants(''),mail:initMailTab,news:loadNewsAdmin,templates:loadTmplMgr,chat:loadChatAdmin,photos:loadPhotoEventOptions,survey:()=>{loadSurveyEventOptions();loadSurveyStats();},};
+  const loaders={dashboard:loadDashboard,events:()=>{loadEvents();loadPrepModels();},qrscan:()=>{startPolling();loadScanLogs();},registrations:()=>{loadEventFilterOptions();loadRegistrations();},participants:()=>searchParticipants(''),mail:initMailTab,news:loadNewsAdmin,templates:loadTmplMgr,chat:loadChatAdmin,photos:loadPhotoEventOptions,survey:()=>{loadSurveyEventOptions();loadSurveyStats();},todo:()=>{loadTodoEventFilter();loadTodo();},};
   if(loaders[tab])loaders[tab]();
   if(tab!=='qrscan')stopPolling();
 }
@@ -792,8 +862,26 @@ async function loadEvents(){
     html+='</div>'; area.innerHTML=html;
   }catch(err){area.innerHTML='<div class="alert alert-danger">'+esc(err.message)+'</div>';}
 }
-function openCreateEventModal(){ editingEventId=null; document.getElementById('event-modal-title').textContent='イベント作成'; ['f-name','f-location'].forEach(id=>document.getElementById(id).value=''); document.getElementById('f-date').value=''; document.getElementById('f-price').value='0'; document.getElementById('f-capacity').value='50'; document.getElementById('f-paytype').value='FREE'; document.getElementById('event-status-row').style.display='none'; document.getElementById('event-modal-alert').innerHTML=''; document.getElementById('event-modal').classList.add('open'); }
-function openEditEventModal(ev){ editingEventId=ev.EventID; document.getElementById('event-modal-title').textContent='イベント編集'; document.getElementById('f-name').value=ev.EventName||''; document.getElementById('f-date').value=(ev.Date||'').replace(' ','T'); document.getElementById('f-location').value=ev.Location||''; document.getElementById('f-price').value=ev.Price||0; document.getElementById('f-capacity').value=ev.Capacity||50; document.getElementById('f-paytype').value=ev.PaymentType||'FREE'; document.getElementById('f-status').value=ev.Status||'OPEN'; document.getElementById('event-status-row').style.display='block'; document.getElementById('event-modal-alert').innerHTML=''; document.getElementById('event-modal').classList.add('open'); }
+function openCreateEventModal(){
+  editingEventId=null;
+  document.getElementById('event-modal-title').textContent='イベント作成';
+  ['f-name','f-location'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-date').value='';
+  document.getElementById('f-price').value='0';
+  document.getElementById('f-capacity').value='50';
+  document.getElementById('f-paytype').value='FREE';
+  document.getElementById('event-status-row').style.display='none';
+  document.getElementById('f-model-row').style.display='block';
+  document.getElementById('event-modal-alert').innerHTML='';
+  // populate prep models
+  const sel=document.getElementById('f-model');
+  sel.innerHTML='<option value="">モデルを選択しない</option>';
+  getEventPrepModels().forEach(m=>{const o=document.createElement('option');o.value=m.id;o.textContent=m.name+' ('+m.tasks.length+'タスク)';sel.appendChild(o);});
+  // f-model-row only show if models exist
+  document.getElementById('f-model-row').style.display=getEventPrepModels().length>0?'block':'none';
+  document.getElementById('event-modal').classList.add('open');
+}
+function openEditEventModal(ev){ editingEventId=ev.EventID; document.getElementById('event-modal-title').textContent='イベント編集'; document.getElementById('f-name').value=ev.EventName||''; document.getElementById('f-date').value=(ev.Date||'').replace(' ','T'); document.getElementById('f-location').value=ev.Location||''; document.getElementById('f-price').value=ev.Price||0; document.getElementById('f-capacity').value=ev.Capacity||50; document.getElementById('f-paytype').value=ev.PaymentType||'FREE'; document.getElementById('f-status').value=ev.Status||'OPEN'; document.getElementById('event-status-row').style.display='block'; document.getElementById('f-model-row').style.display='none'; document.getElementById('event-modal-alert').innerHTML=''; document.getElementById('event-modal').classList.add('open'); }
 function closeEventModal(){ document.getElementById('event-modal').classList.remove('open'); }
 document.getElementById('event-modal').addEventListener('click',e=>{if(e.target===document.getElementById('event-modal'))closeEventModal();});
 async function saveEvent(){
@@ -802,8 +890,23 @@ async function saveEvent(){
   if(!name||!date||!loc){alertEl.innerHTML='<div class="alert alert-danger">イベント名・日時・会場は必須です</div>';return;}
   const btn=document.getElementById('event-save-btn'); btn.disabled=true; btn.textContent='...';
   try{
-    if(editingEventId){await api('updateEvent',{event:{EventID:editingEventId,EventName:name,Date:date.replace('T',' '),Location:loc,Price:Number(document.getElementById('f-price').value)||0,PaymentType:document.getElementById('f-paytype').value,Capacity:Number(document.getElementById('f-capacity').value)||50,Status:document.getElementById('f-status').value}});toast('success','イベントを更新しました');}
-    else{await api('createEvent',{event:{eventName:name,date:date.replace('T',' '),location:loc,price:Number(document.getElementById('f-price').value)||0,paymentType:document.getElementById('f-paytype').value,capacity:Number(document.getElementById('f-capacity').value)||50}});toast('success','イベントを作成しました');}
+    if(editingEventId){
+      await api('updateEvent',{event:{EventID:editingEventId,EventName:name,Date:date.replace('T',' '),Location:loc,Price:Number(document.getElementById('f-price').value)||0,PaymentType:document.getElementById('f-paytype').value,Capacity:Number(document.getElementById('f-capacity').value)||50,Status:document.getElementById('f-status').value}});
+      toast('success','イベントを更新しました');
+    } else {
+      const created=await api('createEvent',{event:{eventName:name,date:date.replace('T',' '),location:loc,price:Number(document.getElementById('f-price').value)||0,paymentType:document.getElementById('f-paytype').value,capacity:Number(document.getElementById('f-capacity').value)||50}});
+      const newEventId=created?.EventID||created?.eventId||('EVT_'+Date.now());
+      // ① スケジュールに自動追加
+      const schItems=getScheduleItems();
+      schItems.push({id:genId(),title:name,date:date.slice(0,10),time:date.slice(11,16)||'',category:'event',assignee:'',memo:loc,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),eventId:newEventId});
+      saveScheduleItems(schItems);
+      // ② 準備モデルが選択されていればTodoに追加
+      const modelId=document.getElementById('f-model').value;
+      if(modelId){
+        applyEventPrepModelTasks(modelId, newEventId, name);
+      }
+      toast('success','イベントを作成しました'+(modelId?' / 準備タスクを追加しました':'')+ ' / スケジュールに追加しました');
+    }
     closeEventModal(); loadEvents(); loadDashboard();
   }catch(err){alertEl.innerHTML='<div class="alert alert-danger">'+esc(err.message)+'</div>';}
   btn.disabled=false; btn.textContent='保存';
@@ -1303,7 +1406,8 @@ function renderTodoItem(t, status){
   div.className='todo-item '+(PRI_CSS[t.priority]||'pri-mid');
   const metaHtml=PRI_LABELS[t.priority]
     +(t.due?'　期限: <span style="color:'+(overdue?'var(--aki)':'var(--ai-soft)')+';">'+esc(t.due)+'</span>':'')
-    +(t.assignee?'　担当: '+esc(t.assignee):'');
+    +(t.assignee?'　担当: '+esc(t.assignee):'')
+    +(t.eventName?'　<span style="background:rgba(123,94,167,.1);color:var(--natsu);border-radius:99px;padding:1px 7px;font-size:.68rem;">📅 '+esc(t.eventName)+'</span>':'');
   div.innerHTML='<div class="todo-item-title">'+esc(t.title)+'</div>'
     +'<div class="todo-item-meta">'+metaHtml+'</div>'
     +(t.memo?'<div style="font-size:.73rem;color:var(--ai-soft);margin-top:3px;line-height:1.5;">'+esc(t.memo)+'</div>':'')
@@ -1318,7 +1422,9 @@ function renderTodoItem(t, status){
   return div.outerHTML;
 }
 function loadTodo(){
-  const todos=getTodos();
+  const filterEventId=document.getElementById('todo-event-filter')?.value||'';
+  let todos=getTodos();
+  if(filterEventId) todos=todos.filter(t=>t.eventId===filterEventId);
   const cols={todo:[],doing:[],done:[]};
   todos.forEach(t=>{ if(cols[t.status]) cols[t.status].push(t); });
 
@@ -1348,7 +1454,7 @@ function moveTodo(id,newStatus){
   toast('success',STATUS_LABELS[newStatus]+'に移動しました');
 }
 
-function openTodoModal(defaultStatus, id){
+async function openTodoModal(defaultStatus, id){
   editingTodoId=id||null;
   const item=id?getTodos().find(x=>x.id===id):null;
   document.getElementById('todo-modal-title').textContent=item?'タスク編集':'タスク追加';
@@ -1359,6 +1465,19 @@ function openTodoModal(defaultStatus, id){
   document.getElementById('todo-memo').value=item?item.memo||'':'';
   document.getElementById('todo-status-input').value=item?item.status:(defaultStatus||'todo');
   document.getElementById('todo-modal-alert').innerHTML='';
+  // populate event link
+  const sel=document.getElementById('todo-event-link');
+  sel.innerHTML='<option value="">紐づけなし</option>';
+  try{
+    const stats=await api('getStats');
+    (stats.eventStats||[]).forEach(ev=>{const o=document.createElement('option');o.value=ev.EventID+'|'+ev.EventName;o.textContent=ev.EventName;if(item&&item.eventId===ev.EventID)o.selected=true;sel.appendChild(o);});
+  }catch(e){}
+  // フィルタ中のイベントがあれば自動選択
+  const filterVal=document.getElementById('todo-event-filter')?.value;
+  if(!item&&filterVal){
+    const opt=sel.querySelector(`option[value^="${filterVal}|"]`);
+    if(opt)opt.selected=true;
+  }
   document.getElementById('todo-modal').classList.add('open');
 }
 
@@ -1367,6 +1486,9 @@ function saveTodoItem(){
   const title=document.getElementById('todo-title-input').value.trim();
   if(!title){alertEl.innerHTML='<div class="alert alert-danger">タスク名を入力してください</div>';return;}
   const all=getTodos();
+  const eventLinkVal=document.getElementById('todo-event-link')?.value||'';
+  const [eventId,...erest]=eventLinkVal.split('|');
+  const eventName=erest.join('|');
   const item={
     id:editingTodoId||genId(),
     title,
@@ -1375,6 +1497,8 @@ function saveTodoItem(){
     assignee:document.getElementById('todo-assignee').value.trim(),
     memo:document.getElementById('todo-memo').value.trim(),
     status:document.getElementById('todo-status-input').value,
+    eventId:eventLinkVal?eventId:'',
+    eventName:eventLinkVal?eventName:'',
     createdAt:editingTodoId?(all.find(x=>x.id===editingTodoId)?.createdAt||new Date().toISOString()):new Date().toISOString(),
     updatedAt:new Date().toISOString()
   };
@@ -1396,6 +1520,238 @@ function deleteTodoItem(id){
 document.getElementById('todo-modal')?.addEventListener('click',e=>{if(e.target===document.getElementById('todo-modal'))closeModal('todo-modal');});
 
 document.querySelectorAll('.delivery-opt').forEach(el=>{const cb=el.querySelector('input[type="checkbox"]');if(cb)cb.addEventListener('change',()=>el.classList.toggle('checked',cb.checked));});
+
+// ════════════════════════════════════════════════
+// PREP MODELS（準備モデル）
+// ════════════════════════════════════════════════
+function getEventPrepModels(){ return lsGet('connecplus_prepmodels')||[]; }
+function saveEventPrepModels(items){ lsSet('connecplus_prepmodels',items); }
+
+let editingPrepModelId=null;
+let prepTaskRowIdx=0;
+
+function loadPrepModels(){
+  const el=document.getElementById('prepmodel-area');
+  if(!el)return;
+  const models=getEventPrepModels();
+  if(!models.length){
+    el.innerHTML='<div style="text-align:center;padding:20px;color:var(--ai-soft);font-size:.82rem;border:2px dashed var(--border);border-radius:var(--rs);">準備モデルはまだありません。「モデル追加」から作成してください。</div>';
+    return;
+  }
+  el.innerHTML='<div class="prepmodel-grid">'+models.map(m=>{
+    const tc=m.tasks?m.tasks.length:0;
+    const preview=(m.tasks||[]).map(t=>{
+      const pc=t.priority==='high'?'var(--aki)':t.priority==='mid'?'var(--natsu)':'var(--fuyu)';
+      const pl=t.priority==='high'?'高':t.priority==='mid'?'中':'低';
+      return `<div>・${esc(t.title)} <span style="color:${pc};font-size:.68rem;">[${pl}]</span>${t.assignee?` <span style="color:var(--ai-soft);">${esc(t.assignee)}</span>`:''}</div>`;
+    }).join('');
+    return `<div class="prepmodel-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="prepmodel-card-name">${esc(m.name)}</div>
+        <span style="background:rgba(123,94,167,.1);color:var(--natsu);border-radius:99px;font-size:.68rem;font-weight:700;padding:2px 8px;">${tc}タスク</span>
+      </div>
+      ${m.desc?`<div class="prepmodel-card-desc">${esc(m.desc)}</div>`:''}
+      <div class="prepmodel-task-preview">${preview}</div>
+      <div class="prepmodel-actions">
+        <button class="btn btn-outline btn-xs" onclick="openPrepModelModal('${esc(m.id)}')">編集</button>
+        <button class="btn btn-xs" style="background:rgba(212,81,26,.1);color:var(--aki);border:none;border-radius:99px;cursor:pointer;font-family:inherit;font-weight:700;padding:3px 9px;font-size:.7rem;" onclick="deletePrepModel('${esc(m.id)}')">削除</button>
+      </div>
+    </div>`;
+  }).join('')+'</div>';
+}
+
+function openPrepModelModal(id){
+  editingPrepModelId=id||null;
+  prepTaskRowIdx=0;
+  const m=id?getEventPrepModels().find(x=>x.id===id):null;
+  document.getElementById('prepmodel-modal-title').textContent=m?'準備モデル 編集':'準備モデル 作成';
+  document.getElementById('pm-name').value=m?m.name:'';
+  document.getElementById('pm-desc').value=m&&m.desc?m.desc:'';
+  document.getElementById('prepmodel-modal-alert').innerHTML='';
+  const list=document.getElementById('pm-tasks-list');
+  list.innerHTML='';
+  if(m&&m.tasks&&m.tasks.length){
+    m.tasks.forEach(t=>addPrepTaskRow(t));
+  } else {
+    // デフォルトタスクのサンプルを3件表示
+    [{title:'会場予約・確認',priority:'high',assignee:''},{title:'告知・参加者募集',priority:'high',assignee:''},{title:'当日スタッフ確認',priority:'mid',assignee:''}].forEach(t=>addPrepTaskRow(t));
+  }
+  document.getElementById('prepmodel-modal').classList.add('open');
+}
+
+function addPrepTaskRow(task){
+  const rowId='ptr-'+(prepTaskRowIdx++);
+  const div=document.createElement('div');
+  div.className='task-row';
+  div.id=rowId;
+  const titleVal=task?esc(task.title||''):'';
+  const priH=task&&task.priority==='high'?' selected':'';
+  const priM=(!task||task.priority==='mid')?' selected':'';
+  const priL=task&&task.priority==='low'?' selected':'';
+  const assVal=task?esc(task.assignee||''):'';
+  div.innerHTML=`<input class="form-control" style="padding:6px 10px;font-size:.82rem;" placeholder="タスク名" value="${titleVal}">
+    <select class="form-control" style="padding:6px 8px;font-size:.78rem;">
+      <option value="high"${priH}>🔴 高</option>
+      <option value="mid"${priM}>🟡 中</option>
+      <option value="low"${priL}>🟢 低</option>
+    </select>
+    <input class="form-control" style="padding:6px 10px;font-size:.78rem;" placeholder="担当者" value="${assVal}">
+    <button style="background:none;border:none;cursor:pointer;color:var(--aki);font-size:1.1rem;line-height:1;" onclick="this.closest('.task-row').remove()">×</button>`;
+  document.getElementById('pm-tasks-list').appendChild(div);
+}
+
+function savePrepModel(){
+  const alertEl=document.getElementById('prepmodel-modal-alert');alertEl.innerHTML='';
+  const name=document.getElementById('pm-name').value.trim();
+  if(!name){alertEl.innerHTML='<div class="alert alert-danger">モデル名を入力してください</div>';return;}
+  const rows=Array.from(document.getElementById('pm-tasks-list').querySelectorAll('.task-row'));
+  const tasks=rows.map(row=>{
+    const inputs=row.querySelectorAll('input,select');
+    const title=(inputs[0]?.value||'').trim();
+    return title?{id:genId(),title,priority:inputs[1]?.value||'mid',assignee:(inputs[2]?.value||'').trim()}:null;
+  }).filter(Boolean);
+  if(!tasks.length){alertEl.innerHTML='<div class="alert alert-danger">タスクを1件以上入力してください</div>';return;}
+  const all=getEventPrepModels();
+  const item={
+    id:editingPrepModelId||genId(),
+    name,
+    desc:document.getElementById('pm-desc').value.trim(),
+    tasks,
+    createdAt:editingPrepModelId?(all.find(x=>x.id===editingPrepModelId)?.createdAt||new Date().toISOString()):new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+  if(editingPrepModelId){const idx=all.findIndex(x=>x.id===editingPrepModelId);if(idx>-1)all[idx]=item;else all.push(item);}
+  else{all.push(item);}
+  saveEventPrepModels(all);
+  closeModal('prepmodel-modal');
+  loadPrepModels();
+  // イベント作成モーダルのセレクトも更新
+  refreshPrepModelSelector();
+  toast('success',(editingPrepModelId?'更新しました':'作成しました')+'（'+tasks.length+'タスク）');
+}
+
+function deletePrepModel(id){
+  if(!confirm('この準備モデルを削除しますか？'))return;
+  saveEventPrepModels(getEventPrepModels().filter(m=>m.id!==id));
+  loadPrepModels();
+  refreshPrepModelSelector();
+  toast('success','削除しました');
+}
+
+// イベント作成モーダルの準備モデルセレクトを更新
+function refreshPrepModelSelector(){
+  const sel=document.getElementById('f-model');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">モデルを選択しない</option>';
+  getEventPrepModels().forEach(m=>{
+    const o=document.createElement('option');
+    o.value=m.id;
+    o.textContent=m.name+' ('+m.tasks.length+'タスク)';
+    sel.appendChild(o);
+  });
+  if(cur)sel.value=cur;
+}
+
+// モデルのタスクをTodoに追加（イベントID紐づき）
+function applyEventPrepModelTasks(modelId, eventId, eventName){
+  const m=getEventPrepModels().find(x=>x.id===modelId);
+  if(!m||!m.tasks)return 0;
+  const all=getTodos();
+  m.tasks.forEach(t=>{
+    all.push({
+      id:genId(),title:t.title,priority:t.priority||'mid',
+      due:'',assignee:t.assignee||'',memo:'',status:'todo',
+      eventId:eventId,eventName:eventName,
+      createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()
+    });
+  });
+  saveTodos(all);
+  return m.tasks.length;
+}
+
+// Todoタブ：イベントフィルタ用セレクトを更新
+async function loadTodoEventFilter(){
+  const sel=document.getElementById('todo-event-filter');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">すべてのTodo</option>';
+  // GASからイベント一覧取得
+  try{
+    const stats=await api('getStats');
+    (stats.eventStats||[]).forEach(ev=>{
+      const o=document.createElement('option');
+      o.value=ev.EventID;
+      o.textContent=ev.EventName;
+      sel.appendChild(o);
+    });
+  }catch(e){}
+  // ローカルTodoのイベントも補完（GASにないもの）
+  const localEvents=[...new Map(getTodos().filter(t=>t.eventId&&t.eventName).map(t=>[t.eventId,t])).values()];
+  localEvents.forEach(t=>{
+    if(!sel.querySelector(`option[value="${t.eventId}"]`)){
+      const o=document.createElement('option');o.value=t.eventId;o.textContent=t.eventName;sel.appendChild(o);
+    }
+  });
+  if(cur)sel.value=cur;
+}
+
+// 後からモデルを適用するモーダル
+async function openApplyPrepModelModal(){
+  const esel=document.getElementById('apm-event-sel');
+  const msel=document.getElementById('apm-model-sel');
+  esel.innerHTML='<option value="">イベントを選択</option>';
+  msel.innerHTML='<option value="">モデルを選択</option>';
+  try{
+    const stats=await api('getStats');
+    (stats.eventStats||[]).forEach(ev=>{
+      const o=document.createElement('option');
+      o.value=ev.EventID+'||'+ev.EventName;
+      o.textContent=ev.EventName;
+      esel.appendChild(o);
+    });
+  }catch(e){}
+  getEventPrepModels().forEach(m=>{
+    const o=document.createElement('option');
+    o.value=m.id;
+    o.textContent=m.name+' ('+m.tasks.length+'タスク)';
+    msel.appendChild(o);
+  });
+  document.getElementById('apm-preview').innerHTML='';
+  document.getElementById('apply-prepmodel-modal').classList.add('open');
+}
+
+function showApplyPreview(){
+  const modelId=document.getElementById('apm-model-sel').value;
+  const el=document.getElementById('apm-preview');
+  if(!modelId){el.innerHTML='';return;}
+  const m=getEventPrepModels().find(x=>x.id===modelId);
+  if(!m){el.innerHTML='';return;}
+  el.innerHTML='<div style="background:var(--shiro-2);border-radius:var(--rs);padding:12px 14px;font-size:.8rem;">'
+    +'<div style="font-weight:700;color:var(--ai);margin-bottom:8px;">追加されるタスク（'+m.tasks.length+'件）</div>'
+    +m.tasks.map(t=>{
+      const pc=t.priority==='high'?'var(--aki)':t.priority==='mid'?'var(--natsu)':'var(--fuyu)';
+      const pl=t.priority==='high'?'高':t.priority==='mid'?'中':'低';
+      return `<div style="padding:3px 0;color:var(--ai-soft);">・${esc(t.title)} <span style="color:${pc};">[${pl}]</span>${t.assignee?' 担当:'+esc(t.assignee):''}</div>`;
+    }).join('')
+    +'</div>';
+}
+
+function doApplyPrepModel(){
+  const eventVal=document.getElementById('apm-event-sel').value;
+  const modelId=document.getElementById('apm-model-sel').value;
+  if(!eventVal||!modelId){toast('danger','イベントとモデルを選択してください');return;}
+  const [eventId,...rest]=eventVal.split('||');
+  const eventName=rest.join('||');
+  const added=applyEventPrepModelTasks(modelId,eventId,eventName);
+  closeModal('apply-prepmodel-modal');
+  toast('success',added+'件の準備タスクを追加しました');
+  if(currentTab==='todo')loadTodo();
+}
+
+document.getElementById('prepmodel-modal')?.addEventListener('click',e=>{if(e.target===document.getElementById('prepmodel-modal'))closeModal('prepmodel-modal');});
+document.getElementById('apply-prepmodel-modal')?.addEventListener('click',e=>{if(e.target===document.getElementById('apply-prepmodel-modal'))closeModal('apply-prepmodel-modal');});
+
 </script>
 </body>
 </html>
