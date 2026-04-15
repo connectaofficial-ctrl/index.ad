@@ -650,21 +650,51 @@ async function loadDashboard(){
 
 // === EVENTS ===
 var editEvId=null,evCQ=[],evRefs=['SNS','友人紹介','Web検索','チラシ','その他'];
+var allEventsCache=[];
 async function loadEvents(){
   const a=document.getElementById('events-area');a.innerHTML='<div class="spinner"></div>';
-  try{const s=await api('getStats');const evs=s.eventStats||[];if(!evs.length){a.innerHTML='<div class="alert alert-info">イベントなし</div>';return;}a.innerHTML='<div class="ev-list">'+evs.map(ev=>'<div class="ev-card"><div class="ev-card-info"><div class="ev-card-name">'+esc(ev.EventName)+'</div><div class="ev-card-meta">'+esc(ev.Date)+' &middot; '+esc(ev.Location||'—')+' &middot; '+(Number(ev.Price)===0?'無料':'¥'+Number(ev.Price).toLocaleString())+' &middot; 登録 '+esc(ev.registrationCount)+'/'+esc(ev.Capacity)+'</div></div><div class="ev-card-actions">'+(ev.Status==='OPEN'||!ev.Status?'<span class="badge badge-green">受付中</span>':'<span class="badge badge-gray">終了</span>')+'<button class="btn btn-outline btn-sm" onclick=\'openEditEv('+JSON.stringify(ev).replace(/'/g,"\\'")+')\'> 編集</button></div></div>').join('')+'</div>';}
+  try{const evs=await api('getEvents');allEventsCache=evs||[];if(!evs.length){a.innerHTML='<div class="alert alert-info">イベントなし</div>';return;}a.innerHTML='<div class="ev-list">'+evs.map(ev=>'<div class="ev-card"><div class="ev-card-info"><div class="ev-card-name">'+esc(ev.EventName)+'</div><div class="ev-card-meta">'+esc(ev.Date)+' &middot; '+esc(ev.Location||'—')+' &middot; '+(Number(ev.Price)===0?'無料':'¥'+Number(ev.Price).toLocaleString())+' &middot; 登録 '+esc(ev.registrationCount)+'/'+esc(ev.Capacity)+'</div></div><div class="ev-card-actions">'+(ev.Status==='OPEN'||!ev.Status?'<span class="badge badge-green">受付中</span>':'<span class="badge badge-gray">終了</span>')+'<button class="btn btn-outline btn-sm" onclick=\'openEditEv('+JSON.stringify(ev).replace(/\\/g,"\\\\").replace(/'/g,"\\'")+')\'> 編集</button></div></div>').join('')+'</div>';}
   catch(err){a.innerHTML='<div class="alert alert-err">'+esc(err.message)+'</div>';}
 }
 function switchEvTab(t,btn){document.querySelectorAll('#ev-modal .tab-btn').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');document.querySelectorAll('#ev-modal .tab-pane').forEach(p=>{p.classList.remove('active');p.style.display='none';});const el=document.getElementById('evtab-'+t);if(el){el.style.display='block';el.classList.add('active');}}
 function openCreateEventModal(){editEvId=null;evCQ=[];evRefs=['SNS','友人紹介','Web検索','チラシ','その他'];selectedPrefs=[];evStations=[];document.getElementById('ev-modal-title').textContent='イベント作成';['f-name','f-location','f-desc','ev-venue-q','ev-lat','ev-lng','ev-msg-first','ev-msg-return'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-date').value='';document.getElementById('f-price').value='0';document.getElementById('f-capacity').value='50';document.getElementById('f-paytype').value='FREE';document.getElementById('ev-status-row').style.display='none';document.querySelectorAll('.ev-restrict-cb').forEach(function(cb){cb.checked=false;});document.getElementById('restrict-region-wrap').style.display='none';populateDeptSelect('f-dept');renderRefTags();renderCQList();renderStations();document.getElementById('ev-access-note').value='';document.getElementById('ev-map').innerHTML='会場を検索';switchEvTab('basic',document.querySelector('#ev-modal .tab-btn'));document.getElementById('ev-modal-alert').innerHTML='';document.getElementById('ev-modal').classList.add('open');}
-function openEditEv(ev){editEvId=ev.EventID;document.getElementById('ev-modal-title').textContent='イベント編集';document.getElementById('f-name').value=ev.EventName||'';document.getElementById('f-date').value=(ev.Date||'').replace(' ','T');document.getElementById('f-location').value=ev.Location||'';document.getElementById('f-price').value=ev.Price||0;document.getElementById('f-capacity').value=ev.Capacity||50;document.getElementById('f-paytype').value=ev.PaymentType||'FREE';document.getElementById('f-desc').value=ev.Description||'';document.getElementById('f-status').value=ev.Status||'OPEN';document.getElementById('ev-status-row').style.display='block';if(ev.Lat)document.getElementById('ev-lat').value=ev.Lat;if(ev.Lng)document.getElementById('ev-lng').value=ev.Lng;if(ev.Lat&&ev.Lng)updateMap();evCQ=ev.customQuestions||[];evRefs=ev.referralOptions||['SNS','友人紹介','Web検索','チラシ','その他'];if(ev.msgFirst)document.getElementById('ev-msg-first').value=ev.msgFirst;if(ev.msgReturn)document.getElementById('ev-msg-return').value=ev.msgReturn;
-  // Restore restriction checkboxes
+function openEditEv(ev){editEvId=ev.EventID;document.getElementById('ev-modal-title').textContent='イベント編集';
+  // Clear all fields first
+  ['f-name','f-location','f-desc','ev-venue-q','ev-lat','ev-lng','ev-msg-first','ev-msg-return','ev-access-note'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  // Populate from event data
+  document.getElementById('f-name').value=ev.EventName||'';
+  var dateVal=(ev.Date||'').toString();
+  // Handle various date formats: "2024-12-31T15:00:00.000Z", "2024-12-31 15:00", etc.
+  if(dateVal.includes('T')&&dateVal.includes('Z'))dateVal=dateVal.slice(0,16);// ISO → datetime-local
+  else if(dateVal.includes('T'))dateVal=dateVal.slice(0,16);
+  else dateVal=dateVal.replace(' ','T');
+  document.getElementById('f-date').value=dateVal;
+  document.getElementById('f-location').value=ev.Location||'';
+  document.getElementById('f-price').value=ev.Price||0;
+  document.getElementById('f-capacity').value=ev.Capacity||50;
+  document.getElementById('f-paytype').value=ev.PaymentType||'FREE';
+  document.getElementById('f-desc').value=ev.Description||'';
+  document.getElementById('f-status').value=ev.Status||'OPEN';
+  document.getElementById('ev-status-row').style.display='block';
+  document.getElementById('ev-lat').value=ev.Lat||'';
+  document.getElementById('ev-lng').value=ev.Lng||'';
+  if(ev.Lat&&ev.Lng)updateMap();else document.getElementById('ev-map').innerHTML='会場を検索';
+  evCQ=ev.customQuestions||[];
+  evRefs=ev.referralOptions||['SNS','友人紹介','Web検索','チラシ','その他'];if(!evRefs.length)evRefs=['SNS','友人紹介','Web検索','チラシ','その他'];
+  document.getElementById('ev-msg-first').value=ev.msgFirst||'';
+  document.getElementById('ev-msg-return').value=ev.msgReturn||'';
+  // Restrictions
   document.querySelectorAll('.ev-restrict-cb').forEach(function(cb){cb.checked=false;});
-  var restrictions=ev.restriction||['none'];if(typeof restrictions==='string')restrictions=[restrictions];
+  var restrictions=ev.restriction||['none'];if(typeof restrictions==='string'){try{restrictions=JSON.parse(restrictions);}catch(e){restrictions=[restrictions];}}if(!Array.isArray(restrictions))restrictions=[restrictions];
   restrictions.forEach(function(r){var cb=document.querySelector('.ev-restrict-cb[value="'+r+'"]');if(cb)cb.checked=true;});
   selectedPrefs=ev.restrictionRegions||[];
   toggleRestrictDetail();
-  renderRefTags();renderCQList();evStations=ev.nearestStations||[];renderStations();document.getElementById('ev-access-note').value=ev.accessNote||'';switchEvTab('basic',document.querySelector('#ev-modal .tab-btn'));document.getElementById('ev-modal-alert').innerHTML='';document.getElementById('ev-modal').classList.add('open');}
+  // Stations & access
+  evStations=ev.nearestStations||[];renderStations();
+  document.getElementById('ev-access-note').value=ev.accessNote||'';
+  // Dept
+  populateDeptSelect('f-dept');
+  renderRefTags();renderCQList();switchEvTab('basic',document.querySelector('#ev-modal .tab-btn'));document.getElementById('ev-modal-alert').innerHTML='';document.getElementById('ev-modal').classList.add('open');}
 async function saveEvent(){const al=document.getElementById('ev-modal-alert');al.innerHTML='';const name=document.getElementById('f-name').value.trim(),date=document.getElementById('f-date').value;if(!name||!date){al.innerHTML='<div class="alert alert-err">イベント名・日時は必須</div>';return;}const btn=document.getElementById('ev-save-btn');btn.disabled=true;btn.textContent='...';const d={eventName:name,date:date.replace('T',' '),location:document.getElementById('f-location').value.trim(),price:Number(document.getElementById('f-price').value)||0,paymentType:document.getElementById('f-paytype').value,capacity:Number(document.getElementById('f-capacity').value)||50,description:document.getElementById('f-desc')?.value?.trim()||'',lat:document.getElementById('ev-lat').value.trim(),lng:document.getElementById('ev-lng').value.trim(),customQuestions:evCQ,referralOptions:evRefs,msgFirst:document.getElementById('ev-msg-first').value.trim(),msgReturn:document.getElementById('ev-msg-return').value.trim(),restriction:getSelectedRestrictions(),restrictionRegions:selectedPrefs,nearestStations:evStations,accessNote:document.getElementById('ev-access-note')?.value?.trim()||''};try{if(editEvId){d.eventId=editEvId;d.Status=document.getElementById('f-status').value;await api('updateEvent',{event:d});}else{const c=await api('createEvent',{event:d});const nid=c?.EventID||c?.eventId||'EVT_'+Date.now();const sch=getSch();sch.push({id:genId(),title:name,date:date.slice(0,10),time:date.slice(11,16)||'',category:'event',assignee:'',memo:d.location});saveSch(sch);}closeModal('ev-modal');loadEvents();loadDashboard();toast('ok','保存しました');}catch(err){al.innerHTML='<div class="alert alert-err">'+esc(err.message)+'</div>';}btn.disabled=false;btn.textContent='保存';}
 function searchVenue(){var q=document.getElementById('ev-venue-q').value.trim();if(!q)return;document.getElementById('ev-map').innerHTML='<iframe src="https://www.google.com/maps/embed/v1/search?key='+MK+'&q='+encodeURIComponent(q)+'&zoom=15" allowfullscreen></iframe>';if(!document.getElementById('f-location').value.trim())document.getElementById('f-location').value=q;}
 function updateMap(){const lat=document.getElementById('ev-lat').value.trim(),lng=document.getElementById('ev-lng').value.trim();if(!lat||!lng)return;document.getElementById('ev-map').innerHTML='<iframe src="https://www.google.com/maps/embed/v1/place?key='+MK+'&q='+lat+','+lng+'&zoom=16" allowfullscreen></iframe>';}
