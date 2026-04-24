@@ -239,6 +239,35 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
 .chip.on{background:var(--ink);color:var(--white);border-color:var(--ink);}
 .chip svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75;}
 
+/* === [8d-1] 検索モーダル === */
+.search-modal-bg{display:none;position:fixed;inset:0;background:rgba(20,22,40,.45);backdrop-filter:blur(4px);z-index:300;align-items:flex-start;justify-content:center;padding:80px 16px 16px;}
+.search-modal-bg.open{display:flex;}
+.search-modal{background:var(--white);border-radius:var(--rx);max-width:620px;width:100%;max-height:70vh;display:flex;flex-direction:column;box-shadow:var(--sh-lg);border:1px solid var(--line);overflow:hidden;transform:translateY(-8px);opacity:0;animation:searchModalIn .15s ease forwards;}
+@keyframes searchModalIn{to{transform:none;opacity:1;}}
+.search-input-wrap{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);}
+.search-icon{width:18px;height:18px;stroke:var(--ink4);fill:none;stroke-width:1.75;flex:none;}
+.search-input{flex:1;border:none;outline:none;background:transparent;font-family:var(--sans);font-size:15px;color:var(--ink);padding:0;letter-spacing:-0.005em;}
+.search-input::placeholder{color:var(--ink4);}
+.search-kbd-esc{font-family:var(--mono);font-size:10px;background:var(--bg2);border:1px solid var(--line);padding:2px 6px;border-radius:4px;color:var(--ink3);}
+.search-filter-row{display:flex;gap:6px;padding:10px 18px;border-bottom:1px solid var(--line);background:var(--bg2);flex-wrap:wrap;}
+.search-results{flex:1;overflow-y:auto;padding:6px;min-height:200px;}
+.search-hint{padding:24px;text-align:left;}
+.search-group{margin-top:8px;}
+.search-group-label{padding:8px 12px 4px;font-size:10px;font-weight:700;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);}
+.search-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .1s;}
+.search-item:hover,.search-item.active{background:var(--indigo-50);}
+.search-item-icon{width:32px;height:32px;border-radius:8px;background:var(--bg2);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink3);}
+.search-item.active .search-item-icon{background:var(--indigo);color:#fff;}
+.search-item-icon svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;}
+.search-item-body{flex:1;min-width:0;}
+.search-item-title{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-0.005em;}
+.search-item-sub{font-size:11px;color:var(--ink4);margin-top:2px;font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.search-item-sub mark{background:var(--amber-50);color:oklch(0.44 0.12 75);padding:0 2px;font-weight:600;}
+.search-item-title mark{background:var(--amber-50);color:oklch(0.44 0.12 75);padding:0 2px;font-weight:600;}
+.search-item-meta{font-size:10.5px;color:var(--ink4);font-family:var(--mono);flex:none;}
+.search-empty{padding:40px 20px;text-align:center;color:var(--ink4);font-size:13px;}
+.search-empty svg{width:32px;height:32px;stroke:var(--ink5);fill:none;stroke-width:1.5;margin-bottom:12px;}
+
 /* === [8c] カードヘッドの新UI対応(旧.card-h 維持しつつ .card-head も) === */
 .card-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .card-sub{font-size:11.5px;color:var(--ink4);margin-top:2px;}
@@ -270,6 +299,38 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
 .ev-tile-foot{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--ink3);padding-top:10px;border-top:1px dashed var(--line2);}
 .ev-tile-stat{font-family:var(--mono);}
 .ev-tile-stat strong{color:var(--ink);font-weight:600;}
+
+/* === [8d-3] 通知センター === */
+.notif-list{display:flex;flex-direction:column;gap:2px;}
+.notif-group-label{padding:16px 4px 8px;font-size:10.5px;font-weight:700;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);}
+.notif-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--r);cursor:pointer;transition:background .12s;background:var(--white);border:1px solid var(--line);position:relative;}
+.notif-item:hover{background:var(--bg2);border-color:var(--line2);}
+.notif-item.unread{background:var(--indigo-50);border-color:var(--indigo-100);}
+.notif-item.unread::before{content:"";position:absolute;left:-1px;top:12px;bottom:12px;width:3px;background:var(--indigo);border-radius:0 2px 2px 0;}
+.notif-item-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;font-size:0;}
+.notif-item-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;}
+.notif-icon-registration{background:var(--indigo-50);color:var(--indigo);}
+.notif-icon-chat{background:var(--coral-50);color:var(--coral-600);}
+.notif-icon-payment{background:var(--green-50);color:var(--green);}
+.notif-icon-mail{background:var(--violet-50);color:var(--violet);}
+.notif-icon-news{background:var(--amber-50);color:oklch(0.5 0.12 75);}
+.notif-icon-checkin{background:var(--teal-50);color:var(--teal);}
+.notif-icon-system{background:var(--bg3);color:var(--ink3);}
+.notif-item-body{flex:1;min-width:0;}
+.notif-item-title{font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.005em;margin-bottom:3px;}
+.notif-item-msg{font-size:12px;color:var(--ink3);line-height:1.5;}
+.notif-item-time{font-size:10.5px;color:var(--ink4);font-family:var(--mono);margin-top:4px;}
+.notif-item-actions{display:flex;gap:4px;align-items:center;flex:none;}
+.notif-mark-read{background:transparent;border:none;color:var(--ink4);cursor:pointer;padding:4px;border-radius:4px;}
+.notif-mark-read:hover{background:var(--bg3);color:var(--indigo);}
+.notif-mark-read svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.notif-empty{padding:60px 20px;text-align:center;color:var(--ink4);}
+.notif-empty svg{width:40px;height:40px;stroke:var(--ink5);fill:none;stroke-width:1.5;margin-bottom:12px;}
+.notif-empty h3{font-family:var(--serif);font-size:22px;color:var(--ink2);font-weight:400;margin:6px 0;letter-spacing:-0.01em;}
+.notif-empty p{font-size:12.5px;color:var(--ink4);}
+
+/* トップバー通知ドットの件数表示拡張(既存の .dot を拡張) */
+.tb-btn .dot{position:absolute;top:5px;right:5px;min-width:14px;height:14px;background:var(--coral);border-radius:99px;border:1.5px solid var(--white);padding:0 3px;font-size:9px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--mono);line-height:1;}
 
 /* レスポンシブ: 狭い画面でKPI2列化 */
 @media (max-width:1100px){
@@ -919,7 +980,7 @@ tr:hover td{background:var(--indigo-50);}
         <div class="brand-chip">運営 / ADMIN</div>
       </div>
       <!-- [8b] cmdk スタイル検索バー -->
-      <div class="cmdk" onclick="alert('検索機能は未実装(将来対応)')">
+      <div class="cmdk" onclick="openSearchModal()">
         <svg class="ic ic-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         <span>検索 &mdash; イベント、参加者、ドキュメント…</span>
         <span class="cmdk-kbd"><span class="kbd">⌘</span><span class="kbd">K</span></span>
@@ -933,7 +994,7 @@ tr:hover td{background:var(--indigo-50);}
       <button class="tb-btn" title="ヘルプ" onclick="alert('ヘルプ機能は未実装')">
         <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
       </button>
-      <button class="tb-btn" title="通知" onclick="switchTab('chat')">
+      <button class="tb-btn" title="通知" onclick="switchTab('notifications')">
         <svg class="ic" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
         <span class="dot" id="tb-notif-dot" style="display:none;"></span>
       </button>
@@ -965,6 +1026,7 @@ tr:hover td{background:var(--indigo-50);}
       </div>
       <div class="s-label"><span>Overview</span></div>
       <button class="s-item active" onclick="switchTab('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</button>
+      <button class="s-item" onclick="switchTab('notifications')"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>通知センター<span class="s-badge" id="notif-sidebar-badge" style="display:none">0</span></button>
       <button class="s-item" onclick="switchTab('events')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>イベント管理</button>
       <button class="s-item" onclick="switchTab('registrations')"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>登録一覧</button>
       <button class="s-item" onclick="switchTab('participants')"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.87"/></svg>参加者</button>
@@ -1326,6 +1388,38 @@ tr:hover td{background:var(--indigo-50);}
       <div id="pg-ads" class="page">
         <div class="page-header"><div class="page-title">広告管理</div><div class="page-actions"><button class="btn btn-primary btn-sm" onclick="openAdModal()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>広告追加</button></div></div>
         <div id="ads-area"></div>
+      </div>
+
+      <!-- [8d-3] 通知センター -->
+      <div id="pg-notifications" class="page">
+        <div class="page-head">
+          <div class="ph-left">
+            <div class="ph-crumbs"><span>運営</span><span class="sep">/</span><span style="color:var(--ink2)">通知センター</span></div>
+            <h1>通知<i>センター</i></h1>
+            <div class="ph-sub">申込・決済・チャット・メール・ニュースなど、全てのシステムアクティビティを時系列で確認できます。</div>
+          </div>
+          <div class="ph-right">
+            <button class="btn btn-outline btn-sm" onclick="markAllNotificationsRead()">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>全て既読
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="clearReadNotifications()" title="30日以上経過した既読通知を削除">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+              古い既読を削除
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="loadNotifications()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg></button>
+          </div>
+        </div>
+        <div class="search-filter-row" style="background:transparent;border:none;padding:0 0 14px 0;">
+          <button class="chip on" data-notif-type="all" onclick="setNotifFilter('all')">すべて</button>
+          <button class="chip" data-notif-type="unread" onclick="setNotifFilter('unread')">未読のみ</button>
+          <button class="chip" data-notif-type="registration" onclick="setNotifFilter('registration')">申込</button>
+          <button class="chip" data-notif-type="chat" onclick="setNotifFilter('chat')">チャット</button>
+          <button class="chip" data-notif-type="payment" onclick="setNotifFilter('payment')">決済</button>
+          <button class="chip" data-notif-type="mail" onclick="setNotifFilter('mail')">メール</button>
+          <button class="chip" data-notif-type="news" onclick="setNotifFilter('news')">ニュース</button>
+          <button class="chip" data-notif-type="checkin" onclick="setNotifFilter('checkin')">チェックイン</button>
+        </div>
+        <div id="notifications-area"><div class="spinner"></div></div>
       </div>
 
     </main>
@@ -1959,6 +2053,34 @@ tr:hover td{background:var(--indigo-50);}
   </div>
 </div>
 
+<!-- [8d-1] 検索モーダル(⌘K/Ctrl+K) -->
+<div class="modal-bg search-modal-bg" id="search-modal" onclick="if(event.target===this)closeSearchModal()">
+  <div class="search-modal">
+    <div class="search-input-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="search-input" class="search-input" placeholder="イベント、参加者、ニュース、テンプレートを検索..." autocomplete="off" spellcheck="false">
+      <span class="search-kbd-esc">ESC</span>
+    </div>
+    <div class="search-filter-row">
+      <button class="chip on" data-scope="all" onclick="setSearchScope('all')">すべて</button>
+      <button class="chip" data-scope="events" onclick="setSearchScope('events')">イベント</button>
+      <button class="chip" data-scope="participants" onclick="setSearchScope('participants')">参加者</button>
+      <button class="chip" data-scope="news" onclick="setSearchScope('news')">ニュース</button>
+      <button class="chip" data-scope="templates" onclick="setSearchScope('templates')">テンプレ</button>
+    </div>
+    <div class="search-results" id="search-results">
+      <div class="search-hint">
+        <div style="color:var(--ink4);font-size:12px;margin-bottom:8px;">検索のヒント</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink3);">
+          <div><span class="kbd">↑</span> <span class="kbd">↓</span> で結果を選択</div>
+          <div><span class="kbd">Enter</span> で開く</div>
+          <div><span class="kbd">ESC</span> で閉じる</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Template Modal -->
 <div class="modal-bg" id="tmpl-modal" onclick="if(event.target===this)closeModal('tmpl-modal')"><div class="modal"><div class="modal-head"><div class="modal-title" id="tmpl-modal-title">定型文 作成</div><button class="modal-close" onclick="closeModal('tmpl-modal')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div><div class="modal-body">
   <div id="tmpl-modal-alert"></div>
@@ -2127,6 +2249,7 @@ function initApp(){
   try { startAutoRefresh(); } catch(e){ console.error('[initApp] startAutoRefresh:', e); }
   try { updateClock(); } catch(e){ console.error('[initApp] updateClock:', e); }
   try { initEventModalShortcuts(); } catch(e){ console.error('[initApp] initEventModalShortcuts:', e); }
+  try { if(typeof startNotifPolling === 'function') startNotifPolling(); } catch(e){ console.error('[initApp] startNotifPolling:', e); }
 }
 
 // === UTILS ===
@@ -5599,11 +5722,7 @@ function updateChatBadge(){
     b.style.display = totalUnread > 0 ? 'inline-block' : 'none';
     b.textContent = totalUnread;
   }
-  // [8b] トップバーの通知ドット
-  var dot = document.getElementById('tb-notif-dot');
-  if(dot){
-    dot.style.display = totalUnread > 0 ? 'block' : 'none';
-  }
+  // [8d-3] トップバーの通知ドットは通知センター側(refreshNotifBadges)で管理するため、ここからは制御しない
 }
 
 async function loadChatAdmin(){
@@ -6911,7 +7030,564 @@ switchTab=function(tab){
   origSwitchTab(tab);
   if(tab==='orgprofile')loadOrgProfile();
   if(tab==='ads')loadAds();
+  if(tab==='notifications')loadNotifications();
 };
+
+// ============================================================
+// [8d-3] 通知センター UI
+// ============================================================
+var notifFilter = 'all'; // 'all' | 'unread' | 'registration' | 'chat' | 'payment' | 'mail' | 'news' | 'checkin'
+var notifCache = [];
+var notifPollTimer = null;
+
+function setNotifFilter(type){
+  notifFilter = type;
+  document.querySelectorAll('[data-notif-type]').forEach(function(c){
+    c.classList.toggle('on', c.dataset.notifType === type);
+  });
+  renderNotifications();
+}
+
+async function loadNotifications(){
+  var area = document.getElementById('notifications-area');
+  if(!area) return;
+  area.innerHTML = '<div class="spinner"></div>';
+  try {
+    var r = await api('getNotifications', { limit: 100 });
+    notifCache = (r && r.items) || [];
+    renderNotifications();
+    // バッジ更新
+    updateNotifBadges((r && r.unread) || 0);
+  } catch(err){
+    console.error('[loadNotifications] エラー:', err);
+    area.innerHTML = '<div class="alert alert-err">通知の読込失敗: ' + esc(err.message || String(err)) + '</div>';
+  }
+}
+
+function renderNotifications(){
+  var area = document.getElementById('notifications-area');
+  if(!area) return;
+
+  // フィルタ適用
+  var items = notifCache.filter(function(n){
+    if(notifFilter === 'all') return true;
+    if(notifFilter === 'unread') return !n.isRead;
+    return n.type === notifFilter;
+  });
+
+  if(!items.length){
+    area.innerHTML = '<div class="notif-empty">' +
+      '<svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>' +
+      '<h3>通知はありません</h3>' +
+      '<p>' + (notifFilter === 'unread' ? '未読の通知はありません' : 'アクティビティが記録されるとここに表示されます') + '</p>' +
+    '</div>';
+    return;
+  }
+
+  // 日付でグルーピング
+  var groups = {};
+  items.forEach(function(n){
+    var d;
+    try { d = new Date(n.createdAt); } catch(e){ d = new Date(); }
+    if(isNaN(d.getTime())) d = new Date();
+    var key = notifGroupKey(d);
+    if(!groups[key]) groups[key] = { label: key, items: [] };
+    groups[key].items.push(n);
+  });
+
+  var html = '<div class="notif-list">';
+  Object.keys(groups).forEach(function(key){
+    html += '<div class="notif-group-label">' + esc(groups[key].label) + ' · ' + groups[key].items.length + '件</div>';
+    groups[key].items.forEach(function(n){
+      html += renderNotifItem(n);
+    });
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function notifGroupKey(d){
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var yesterday = new Date(today.getTime() - 24 * 60 * 60 * 1000);
+  var weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  var target = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  if(target.getTime() === today.getTime()) return '今日';
+  if(target.getTime() === yesterday.getTime()) return '昨日';
+  if(target >= weekAgo) return 'この1週間';
+  // 月日形式
+  return (d.getMonth() + 1) + '月' + d.getDate() + '日';
+}
+
+function renderNotifItem(n){
+  var iconCls = 'notif-icon-' + (n.type || 'system');
+  var iconSvg = getNotifIcon(n.type);
+  var timeDisp = formatNotifTime(n.createdAt);
+  var unreadCls = n.isRead ? '' : ' unread';
+  var escId = esc(n.id);
+  var linkAttr = '';
+  if(n.linkType && n.linkID){
+    linkAttr = 'onclick="openNotificationLink(\'' + esc(n.id) + '\',\'' + esc(n.linkType) + '\',\'' + esc(n.linkID) + '\')"';
+  } else {
+    linkAttr = 'onclick="toggleNotifRead(\'' + escId + '\')"';
+  }
+  var readBtnHtml = n.isRead ? '' :
+    '<button class="notif-mark-read" onclick="event.stopPropagation();toggleNotifRead(\'' + escId + '\')" title="既読にする">' +
+      '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' +
+    '</button>';
+
+  return '<div class="notif-item' + unreadCls + '" ' + linkAttr + '>' +
+    '<div class="notif-item-icon ' + iconCls + '">' + iconSvg + '</div>' +
+    '<div class="notif-item-body">' +
+      '<div class="notif-item-title">' + esc(n.title || '') + '</div>' +
+      (n.message ? '<div class="notif-item-msg">' + esc(n.message) + '</div>' : '') +
+      '<div class="notif-item-time">' + timeDisp + '</div>' +
+    '</div>' +
+    '<div class="notif-item-actions">' + readBtnHtml + '</div>' +
+  '</div>';
+}
+
+function getNotifIcon(type){
+  var icons = {
+    registration: '<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>',
+    chat: '<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+    payment: '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+    mail: '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 7 10-7"/></svg>',
+    news: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>',
+    checkin: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h7v7h-7z"/></svg>',
+    system: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>'
+  };
+  return icons[type] || icons.system;
+}
+
+function formatNotifTime(iso){
+  try {
+    var d = new Date(iso);
+    if(isNaN(d.getTime())) return '';
+    var now = new Date();
+    var diff = (now - d) / 1000; // 秒
+    if(diff < 60) return 'たった今';
+    if(diff < 3600) return Math.floor(diff / 60) + '分前';
+    if(diff < 86400) return Math.floor(diff / 3600) + '時間前';
+    // それ以上は時刻
+    var pad = function(n){ return n < 10 ? '0' + n : n; };
+    return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  } catch(e){ return ''; }
+}
+
+async function toggleNotifRead(id){
+  var n = notifCache.find(function(x){ return x.id === id; });
+  if(!n) return;
+  if(n.isRead) return; // 既に既読なら何もしない
+  try {
+    await api('markNotificationRead', { id: id });
+    n.isRead = true;
+    renderNotifications();
+    // バッジ更新
+    await refreshNotifBadges();
+  } catch(err){
+    toast('err', '既読化失敗: ' + err.message);
+  }
+}
+
+async function openNotificationLink(id, linkType, linkID){
+  // 既読化
+  try { await api('markNotificationRead', { id: id }); } catch(e){}
+  var n = notifCache.find(function(x){ return x.id === id; });
+  if(n) n.isRead = true;
+
+  // 遷移
+  if(linkType === 'event'){
+    editEvent(linkID);
+  } else if(linkType === 'chat'){
+    switchTab('chat');
+    setTimeout(function(){
+      if(typeof openThread === 'function') openThread(linkID);
+    }, 200);
+  } else if(linkType === 'news'){
+    switchTab('news');
+    setTimeout(function(){ if(typeof editNews === 'function') editNews(linkID); }, 200);
+  } else if(linkType === 'mail'){
+    switchTab('mail');
+  }
+
+  // バッジ更新
+  await refreshNotifBadges();
+  renderNotifications();
+}
+
+async function markAllNotificationsRead(){
+  if(!confirm('全ての通知を既読にしますか?')) return;
+  try {
+    var r = await api('markAllNotificationsRead', {});
+    toast('ok', (r.updated || 0) + '件を既読にしました');
+    notifCache.forEach(function(n){ n.isRead = true; });
+    renderNotifications();
+    await refreshNotifBadges();
+  } catch(err){
+    toast('err', '既読化失敗: ' + err.message);
+  }
+}
+
+async function clearReadNotifications(){
+  if(!confirm('30日以上前の既読通知を削除します。よろしいですか?')) return;
+  try {
+    var r = await api('clearNotifications', { olderThanDays: 30 });
+    toast('ok', (r.deleted || 0) + '件を削除しました');
+    await loadNotifications();
+  } catch(err){
+    toast('err', '削除失敗: ' + err.message);
+  }
+}
+
+// バッジ件数を軽量API で更新(通知ページ外でも定期実行)
+async function refreshNotifBadges(){
+  try {
+    var r = await api('getNotificationUnreadCount', {});
+    updateNotifBadges((r && r.unread) || 0);
+  } catch(err){
+    // サイレント失敗
+  }
+}
+
+function updateNotifBadges(unreadCount){
+  // トップバーの赤ドット(件数も表示)
+  var dot = document.getElementById('tb-notif-dot');
+  if(dot){
+    if(unreadCount > 0){
+      dot.style.display = 'flex';
+      dot.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+    } else {
+      dot.style.display = 'none';
+    }
+  }
+  // サイドバー通知センター項目のバッジ
+  var sbadge = document.getElementById('notif-sidebar-badge');
+  if(sbadge){
+    if(unreadCount > 0){
+      sbadge.style.display = 'inline-block';
+      sbadge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+    } else {
+      sbadge.style.display = 'none';
+    }
+  }
+}
+
+// 通知ポーリング: initApp内で既に定期実行されているupdateChatBadgeとは別
+// 初回アクセス + 2分おきに更新
+function startNotifPolling(){
+  refreshNotifBadges();
+  if(notifPollTimer) clearInterval(notifPollTimer);
+  notifPollTimer = setInterval(refreshNotifBadges, 120000); // 2分
+}
+
+// ============================================================
+// [8d-1] 検索機能: ⌘K/Ctrl+K で呼び出し、4種類を横断検索
+// ============================================================
+var searchScope = 'all'; // 'all' | 'events' | 'participants' | 'news' | 'templates'
+var searchActiveIndex = 0;
+var searchLastResults = []; // 現在表示中の結果(キーボードナビ用)
+var searchInputTimer = null;
+var searchCache = { events: null, participants: null, news: null, templates: null, loadedAt: 0 };
+
+// 検索モーダルを開く
+function openSearchModal(){
+  var modal = document.getElementById('search-modal');
+  if(!modal) return;
+  modal.classList.add('open');
+  // フォーカス
+  setTimeout(function(){
+    var inp = document.getElementById('search-input');
+    if(inp){ inp.value = ''; inp.focus(); }
+    // ヒント表示を戻す
+    renderSearchHint();
+    setSearchScope('all');
+  }, 50);
+  // キャッシュを更新(5分以上経過していたら)
+  var now = Date.now();
+  if(now - searchCache.loadedAt > 5 * 60 * 1000){
+    loadSearchCache();
+  }
+}
+
+function closeSearchModal(){
+  var modal = document.getElementById('search-modal');
+  if(modal) modal.classList.remove('open');
+}
+
+function renderSearchHint(){
+  var el = document.getElementById('search-results');
+  if(!el) return;
+  el.innerHTML = '<div class="search-hint">' +
+    '<div style="color:var(--ink4);font-size:12px;margin-bottom:8px;">検索のヒント</div>' +
+    '<div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--ink3);">' +
+      '<div><span class="kbd">↑</span> <span class="kbd">↓</span> で結果を選択</div>' +
+      '<div><span class="kbd">Enter</span> で開く</div>' +
+      '<div><span class="kbd">ESC</span> で閉じる</div>' +
+    '</div></div>';
+}
+
+// キャッシュ読込(並列)
+async function loadSearchCache(){
+  try {
+    var results = await Promise.all([
+      api('getEvents', {}).catch(function(){ return []; }),
+      api('getParticipants', { query: '' }).catch(function(){ return []; }),
+      api('getNewsList', { mode: 'admin' }).catch(function(){ return { items: [] }; }),
+      Promise.resolve(getTmpls()) // ローカルから取得
+    ]);
+    searchCache.events = Array.isArray(results[0]) ? results[0] : [];
+    searchCache.participants = Array.isArray(results[1]) ? results[1] : [];
+    var newsRes = results[2];
+    searchCache.news = (newsRes && Array.isArray(newsRes.items)) ? newsRes.items : (Array.isArray(newsRes) ? newsRes : []);
+    searchCache.templates = Array.isArray(results[3]) ? results[3] : [];
+    searchCache.loadedAt = Date.now();
+  } catch(err){
+    console.error('[search] キャッシュ読込失敗:', err);
+  }
+}
+
+function setSearchScope(scope){
+  searchScope = scope;
+  // チップのON/OFF
+  document.querySelectorAll('.search-filter-row .chip').forEach(function(c){
+    c.classList.toggle('on', c.dataset.scope === scope);
+  });
+  // 再検索
+  var inp = document.getElementById('search-input');
+  var q = inp ? inp.value.trim() : '';
+  if(q) performSearch(q);
+}
+
+// 検索実行
+function performSearch(query){
+  searchActiveIndex = 0;
+  if(!query){ renderSearchHint(); searchLastResults = []; return; }
+  var qlc = query.toLowerCase();
+  var results = [];
+
+  // 1. イベント
+  if((searchScope === 'all' || searchScope === 'events') && searchCache.events){
+    var evMatches = searchCache.events.filter(function(ev){
+      return matchAny([ev.EventName, ev.EventID, ev.Location, ev.Description], qlc);
+    }).slice(0, 10);
+    if(evMatches.length){
+      results.push({ group: 'events', label: 'イベント', items: evMatches.map(function(ev){
+        return {
+          type: 'event',
+          id: ev.EventID,
+          title: ev.EventName || '(名前なし)',
+          sub: (ev.Date || '') + (ev.Location ? ' · ' + ev.Location : ''),
+          meta: ev.Status || '',
+          onClick: function(){ closeSearchModal(); editEvent(ev.EventID); }
+        };
+      })});
+    }
+  }
+
+  // 2. 参加者
+  if((searchScope === 'all' || searchScope === 'participants') && searchCache.participants){
+    var pMatches = searchCache.participants.filter(function(p){
+      return matchAny([p.Name, p.Email, p.Phone, p.ParticipantID], qlc);
+    }).slice(0, 10);
+    if(pMatches.length){
+      results.push({ group: 'participants', label: '参加者', items: pMatches.map(function(p){
+        return {
+          type: 'participant',
+          id: p.ParticipantID,
+          title: p.Name || '(名前なし)',
+          sub: (p.Email || '') + (p.Phone ? ' · ' + p.Phone : ''),
+          meta: p.Rank || 'New',
+          onClick: function(){
+            closeSearchModal();
+            switchTab('participants');
+            // 検索欄に値を入れて検索
+            setTimeout(function(){
+              var pq = document.getElementById('part-query');
+              if(pq){ pq.value = p.Name; searchParticipants(); }
+            }, 200);
+          }
+        };
+      })});
+    }
+  }
+
+  // 3. ニュース
+  if((searchScope === 'all' || searchScope === 'news') && searchCache.news){
+    var nMatches = searchCache.news.filter(function(n){
+      return matchAny([n.title, n.body, n.category], qlc);
+    }).slice(0, 10);
+    if(nMatches.length){
+      results.push({ group: 'news', label: 'ニュース', items: nMatches.map(function(n){
+        return {
+          type: 'news',
+          id: n.id,
+          title: n.title || '(無題)',
+          sub: (n.body || '').substring(0, 80),
+          meta: n.status || '',
+          onClick: function(){
+            closeSearchModal();
+            switchTab('news');
+            setTimeout(function(){ if(typeof editNews === 'function') editNews(n.id); }, 200);
+          }
+        };
+      })});
+    }
+  }
+
+  // 4. テンプレ
+  if((searchScope === 'all' || searchScope === 'templates') && searchCache.templates){
+    var tMatches = searchCache.templates.filter(function(t, idx){
+      var ok = matchAny([t.name, t.body], qlc);
+      if(ok) t._tmplIdx = idx; // インデックス保持
+      return ok;
+    }).slice(0, 10);
+    if(tMatches.length){
+      results.push({ group: 'templates', label: 'テンプレート', items: tMatches.map(function(t){
+        return {
+          type: 'template',
+          id: t._tmplIdx,
+          title: t.name || '(名称なし)',
+          sub: (t.body || '').substring(0, 80),
+          meta: '',
+          onClick: function(){ closeSearchModal(); switchTab('templates'); }
+        };
+      })});
+    }
+  }
+
+  renderSearchResults(results, qlc);
+}
+
+// 全ての値のいずれかにqlcが含まれるか
+function matchAny(vals, qlc){
+  for(var i = 0; i < vals.length; i++){
+    if(vals[i] && String(vals[i]).toLowerCase().indexOf(qlc) >= 0) return true;
+  }
+  return false;
+}
+
+// マッチ部分を<mark>で囲む
+function highlightMatch(text, qlc){
+  if(!text) return '';
+  var txt = String(text);
+  var idx = txt.toLowerCase().indexOf(qlc);
+  if(idx < 0) return esc(txt);
+  return esc(txt.substring(0, idx)) + '<mark>' + esc(txt.substring(idx, idx + qlc.length)) + '</mark>' + esc(txt.substring(idx + qlc.length));
+}
+
+// 結果描画
+function renderSearchResults(groups, qlc){
+  var el = document.getElementById('search-results');
+  if(!el) return;
+  var totalItems = groups.reduce(function(sum, g){ return sum + g.items.length; }, 0);
+  if(!totalItems){
+    el.innerHTML = '<div class="search-empty">' +
+      '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>' +
+      '<div>該当する結果がありません</div>' +
+      '<div style="font-size:11px;margin-top:6px;color:var(--ink5);">別のキーワードで試してみてください</div>' +
+    '</div>';
+    searchLastResults = [];
+    return;
+  }
+
+  searchLastResults = [];
+  var html = '';
+  groups.forEach(function(g){
+    html += '<div class="search-group">';
+    html += '<div class="search-group-label">' + esc(g.label) + ' · ' + g.items.length + '件</div>';
+    g.items.forEach(function(item){
+      var flatIdx = searchLastResults.length;
+      searchLastResults.push(item);
+      var iconSvg = getSearchItemIcon(item.type);
+      html += '<div class="search-item" data-idx="' + flatIdx + '" onmouseenter="setSearchActive(' + flatIdx + ')" onclick="activateSearchItem(' + flatIdx + ')">' +
+        '<div class="search-item-icon">' + iconSvg + '</div>' +
+        '<div class="search-item-body">' +
+          '<div class="search-item-title">' + highlightMatch(item.title, qlc) + '</div>' +
+          (item.sub ? '<div class="search-item-sub">' + highlightMatch(item.sub, qlc) + '</div>' : '') +
+        '</div>' +
+        (item.meta ? '<div class="search-item-meta">' + esc(item.meta) + '</div>' : '') +
+      '</div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
+  setSearchActive(0);
+}
+
+function getSearchItemIcon(type){
+  var map = {
+    event: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>',
+    participant: '<svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>',
+    news: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>',
+    template: '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+  };
+  return map[type] || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>';
+}
+
+function setSearchActive(idx){
+  if(idx < 0 || idx >= searchLastResults.length) return;
+  searchActiveIndex = idx;
+  document.querySelectorAll('.search-item').forEach(function(el, i){
+    el.classList.toggle('active', Number(el.dataset.idx) === idx);
+  });
+  // スクロール調整
+  var activeEl = document.querySelector('.search-item.active');
+  if(activeEl && activeEl.scrollIntoView){
+    activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+function activateSearchItem(idx){
+  var item = searchLastResults[idx];
+  if(item && typeof item.onClick === 'function'){
+    item.onClick();
+  }
+}
+
+// ===== イベントリスナー =====
+document.addEventListener('DOMContentLoaded', function(){
+  // 検索入力
+  var inp = document.getElementById('search-input');
+  if(inp){
+    inp.addEventListener('input', function(){
+      var q = inp.value.trim();
+      clearTimeout(searchInputTimer);
+      searchInputTimer = setTimeout(function(){ performSearch(q); }, 120);
+    });
+    inp.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowDown'){
+        e.preventDefault();
+        if(searchLastResults.length) setSearchActive(Math.min(searchActiveIndex + 1, searchLastResults.length - 1));
+      } else if(e.key === 'ArrowUp'){
+        e.preventDefault();
+        if(searchLastResults.length) setSearchActive(Math.max(searchActiveIndex - 1, 0));
+      } else if(e.key === 'Enter'){
+        e.preventDefault();
+        if(searchLastResults.length) activateSearchItem(searchActiveIndex);
+      } else if(e.key === 'Escape'){
+        e.preventDefault();
+        closeSearchModal();
+      }
+    });
+  }
+
+  // ⌘K / Ctrl+K ショートカット
+  document.addEventListener('keydown', function(e){
+    if((e.metaKey || e.ctrlKey) && e.key === 'k'){
+      e.preventDefault();
+      // ログイン済みの場合のみ
+      if(document.getElementById('app').style.display === 'block'){
+        openSearchModal();
+      }
+    }
+    // ESC で閉じる(モーダル外でもキャッチ)
+    if(e.key === 'Escape'){
+      var sm = document.getElementById('search-modal');
+      if(sm && sm.classList.contains('open')) closeSearchModal();
+    }
+  });
+});
 </script>
 </body>
 </html>
