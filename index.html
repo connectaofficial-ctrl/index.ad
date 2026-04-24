@@ -115,32 +115,87 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
 .app{display:none;}
 /* [8a] トップバー: 新UIベースに刷新 */
 .topbar{height:52px;background:var(--white);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;position:sticky;top:0;z-index:100;}
+.tb-left{display:flex;align-items:center;gap:20px;}
 .topbar-brand{display:flex;align-items:center;gap:10px;cursor:pointer;}
 /* 新UIブランドマーク: indigo グラデ + 白枠 + coral ドット */
-.topbar-logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--indigo) 0%,var(--indigo-700) 100%);position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(68,71,163,.3),inset 0 1px 0 rgba(255,255,255,.2);color:transparent;font-size:0;}
+.topbar-logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--indigo) 0%,var(--indigo-700) 100%);position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(68,71,163,.3),inset 0 1px 0 rgba(255,255,255,.2);color:transparent;font-size:0;flex:none;}
 .topbar-logo::after{content:"";position:absolute;inset:5px;border:1.5px solid rgba(255,255,255,.6);border-radius:4px;border-bottom:none;border-right:none;}
 .topbar-logo::before{content:"";position:absolute;right:5px;bottom:5px;width:6px;height:6px;background:var(--coral);border-radius:2px;}
 .topbar-name{font-family:var(--serif);font-size:20px;color:var(--ink);letter-spacing:-0.01em;line-height:1;font-weight:400;}
 .topbar-name em{font-style:italic;color:var(--coral);margin-left:1px;}
+/* [8b] ブランドチップ */
+.brand-chip{font-size:9.5px;font-weight:600;color:var(--ink4);background:var(--bg3);padding:3px 7px;border-radius:99px;letter-spacing:0.08em;text-transform:uppercase;font-family:var(--mono);}
+/* [8b] cmdk 検索バー */
+.cmdk{display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--ink4);font-size:12.5px;cursor:pointer;min-width:320px;transition:all .15s;}
+.cmdk:hover{background:var(--white);border-color:var(--line2);}
+.cmdk-kbd{margin-left:auto;display:flex;gap:3px;}
+.kbd{font-family:var(--mono);font-size:10px;background:var(--white);border:1px solid var(--line2);border-bottom-width:2px;padding:1px 5px;border-radius:4px;color:var(--ink3);line-height:1.4;}
+/* [8b] tb-right とアイコンボタン群 */
+.tb-right{display:flex;align-items:center;gap:4px;}
+.tb-btn{height:34px;padding:0 10px;display:flex;align-items:center;gap:7px;border-radius:8px;background:transparent;border:none;color:var(--ink3);font-size:12.5px;font-weight:500;cursor:pointer;position:relative;transition:all .15s;}
+.tb-btn:hover{background:var(--bg2);color:var(--ink);}
+.tb-btn .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;background:var(--coral);border-radius:50%;border:1.5px solid var(--white);}
+.tb-divider{width:1px;height:20px;background:var(--line);margin:0 6px;}
+/* [8b] ユーザブロック */
+.tb-user{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:99px;background:var(--bg2);border:1px solid var(--line);cursor:pointer;transition:all .15s;}
+.tb-user:hover{background:var(--white);border-color:var(--line2);}
+.tb-user-name{font-size:12.5px;font-weight:600;color:var(--ink2);line-height:1.2;}
+.tb-user-role{font-size:10.5px;color:var(--ink4);line-height:1.2;}
+/* [8a][8b] Avatar(既存 .topbar-avatar は tb-user 内で再利用) */
+.topbar-time{font-size:.72rem;color:var(--ink4);font-family:var(--mono);padding:0 6px;}
+.topbar-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--indigo-200),var(--indigo));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;letter-spacing:-0.02em;flex:none;cursor:pointer;}
+/* 旧 .avatar クラス(新UI互換) */
+.avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--indigo-200),var(--indigo));display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:600;font-size:11px;letter-spacing:-0.02em;flex:none;}
+.avatar.coral{background:linear-gradient(135deg,var(--coral-100),var(--coral));}
+.avatar.green{background:linear-gradient(135deg,var(--green-100),var(--green));}
+.avatar.amber{background:linear-gradient(135deg,var(--amber-100),var(--amber));}
+.avatar.violet{background:linear-gradient(135deg,var(--violet-50),var(--violet));}
+.avatar.teal{background:linear-gradient(135deg,var(--teal-50),var(--teal));}
+.avatar.red{background:linear-gradient(135deg,var(--red-50),var(--red));}
+.avatar.sm{width:22px;height:22px;font-size:10px;}
+.avatar.lg{width:40px;height:40px;font-size:14px;}
+.avatar.xl{width:56px;height:56px;font-size:20px;}
+/* アイコンヘルパー(tb-btn などで使用) */
+.ic{width:16px;height:16px;stroke-width:1.75;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+.ic-sm{width:14px;height:14px;}
+.ic-lg{width:20px;height:20px;}
+.ic-xl{width:24px;height:24px;}
+/* 旧 topbar-right/btn 互換(残っている箇所のため) */
 .topbar-right{display:flex;align-items:center;gap:10px;}
-.topbar-time{font-size:.72rem;color:var(--ink4);font-family:var(--mono);}
-.topbar-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--indigo-600),var(--indigo-700));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;cursor:pointer;transition:transform .15s;box-shadow:var(--sh-sm);}
-.topbar-avatar:hover{transform:scale(1.05);}
 .topbar-btn{padding:6px 12px;border-radius:var(--rs);border:1px solid var(--line);background:var(--white);color:var(--ink3);font-size:.76rem;font-weight:500;cursor:pointer;font-family:var(--sans);transition:all .15s;}
 .topbar-btn:hover{border-color:var(--ink4);color:var(--ink);background:var(--bg2);}
 
-.layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 52px);}
-/* [8a] サイドバー: 新UIベース */
-.sidebar{background:var(--white);border-right:1px solid var(--line);padding:16px 0;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px);}
-.main{padding:28px 32px;overflow-y:auto;background:var(--bg);}
+.layout{display:grid;grid-template-columns:232px 1fr;min-height:calc(100vh - 52px);}
+/* [8a][8b] サイドバー: 新UIベース(コンパクト・モダン) */
+.sidebar{width:232px;background:var(--white);border-right:1px solid var(--line);padding:14px 10px;overflow-y:auto;position:sticky;top:52px;height:calc(100vh - 52px);display:flex;flex-direction:column;gap:2px;flex:none;}
+.sidebar::-webkit-scrollbar{width:6px;}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+.main{padding:28px 32px;overflow-y:auto;background:var(--bg);min-width:0;}
 
-/* === SIDEBAR === */
-.s-label{padding:18px 16px 6px;font-size:10px;font-weight:600;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);display:flex;justify-content:space-between;align-items:center;}
-.s-item{display:flex;align-items:center;gap:10px;padding:7px 16px;font-size:.82rem;color:var(--ink3);cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--sans);font-weight:500;transition:all .15s;border-left:2px solid transparent;position:relative;margin:1px 0;}
+/* [8b] 組織スイッチャー */
+.org-switch{padding:10px;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;margin-bottom:6px;cursor:pointer;background:var(--bg2);transition:all .15s;}
+.org-switch:hover{background:var(--white);box-shadow:var(--sh-sm);}
+.org-logo{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--coral),var(--coral-600));display:flex;align-items:center;justify-content:center;color:white;font-family:var(--serif);font-size:18px;flex:none;}
+.org-info{flex:1;min-width:0;}
+.org-name{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.org-plan{font-size:10.5px;color:var(--ink4);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.05em;}
+
+/* === SIDEBAR ラベル・メニュー === */
+.s-label{padding:16px 10px 6px;font-size:10px;font-weight:700;color:var(--ink4);letter-spacing:.1em;text-transform:uppercase;font-family:var(--mono);display:flex;justify-content:space-between;align-items:center;}
+.s-label span:last-child{color:var(--ink5);font-weight:500;font-family:var(--mono);text-transform:none;letter-spacing:0;}
+/* [8b] 旧 .s-item の書き直し(新UIスタイル) */
+.s-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;color:var(--ink2);font-size:13px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:var(--sans);font-weight:500;transition:all .12s;position:relative;margin:1px 0;}
 .s-item:hover{background:var(--bg2);color:var(--ink);}
-.s-item.active{background:var(--indigo-50);color:var(--indigo-700);font-weight:600;border-left-color:var(--indigo);}
-.s-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
-.s-badge{margin-left:auto;background:var(--coral);color:#fff;border-radius:99px;font-size:.6rem;font-weight:700;padding:1px 6px;min-width:18px;text-align:center;line-height:1.4;}
+.s-item.active{background:var(--indigo-50);color:var(--indigo-700);font-weight:600;}
+.s-item.active::before{content:"";position:absolute;left:-10px;top:8px;bottom:8px;width:2.5px;background:var(--indigo);border-radius:0 2px 2px 0;}
+.s-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;color:var(--ink3);}
+.s-item.active svg{color:var(--indigo);}
+.s-badge{margin-left:auto;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--coral);color:#fff;font-weight:600;font-family:var(--mono);line-height:1.4;}
+.s-item.active .s-badge{background:var(--indigo);color:var(--white);}
+/* [8b] n-badge / n-dot(新UI互換) */
+.n-badge{margin-left:auto;font-size:10.5px;padding:1px 6px;border-radius:99px;background:var(--bg3);color:var(--ink3);font-weight:600;font-family:var(--mono);}
+.s-item.active .n-badge{background:var(--indigo);color:var(--white);}
+.n-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--coral);}
 
 /* === CORE UI === */
 .page{display:none;}
@@ -151,6 +206,82 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:10
 .page-title{font-family:var(--serif);font-size:28px;font-weight:400;color:var(--ink);letter-spacing:-0.015em;line-height:1.1;}
 .page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
 .updated-label{font-size:.72rem;color:var(--ink4);}
+
+/* === [8c] 新UIスタイル ページヘッド(ブレッドクラム + 挨拶タイトル + 右アクション) === */
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+.ph-left{flex:1;min-width:0;}
+.ph-left h1{font-family:var(--serif);font-size:36px;font-weight:400;letter-spacing:-0.02em;line-height:1.05;color:var(--ink);}
+.ph-left h1 i{font-style:italic;color:var(--coral);}
+.ph-sub{color:var(--ink3);font-size:13px;margin-top:6px;max-width:520px;}
+.ph-crumbs{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink4);margin-bottom:8px;font-weight:500;}
+.ph-crumbs span.sep{color:var(--ink5);}
+.ph-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+
+/* === [8c] KPIタイル(数値 + デルタ + スパークライン) === */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+.kpi{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);padding:16px 18px;position:relative;overflow:hidden;transition:box-shadow .15s,border-color .15s;}
+.kpi:hover{box-shadow:var(--sh-sm);border-color:var(--line2);}
+.kpi-label{font-size:11.5px;color:var(--ink4);font-weight:600;letter-spacing:0.02em;display:flex;align-items:center;gap:6px;text-transform:uppercase;font-family:var(--mono);}
+.kpi-label svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.75;}
+.kpi-value{font-family:var(--serif);font-size:40px;font-weight:400;color:var(--ink);letter-spacing:-0.025em;line-height:1.05;margin-top:8px;display:flex;align-items:baseline;gap:5px;}
+.kpi-value .unit{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink3);letter-spacing:0;}
+.kpi-delta{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:99px;margin-top:8px;font-variant-numeric:tabular-nums;}
+.kpi-delta.up{background:var(--green-50);color:var(--green);}
+.kpi-delta.dn{background:var(--red-50);color:var(--red);}
+.kpi-delta.flat{background:var(--bg3);color:var(--ink3);}
+.kpi-delta svg{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2.2;}
+.kpi-delta .suffix{color:var(--ink4);font-weight:500;margin-left:3px;}
+.kpi-spark{margin-top:12px;height:32px;display:block;width:100%;}
+
+/* === [8c] chip コンポーネント === */
+.chip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:99px;font-size:11px;font-weight:500;background:var(--bg2);color:var(--ink2);border:1px solid var(--line);cursor:pointer;font-family:var(--sans);transition:all .15s;white-space:nowrap;}
+.chip:hover{background:var(--white);box-shadow:var(--sh-sm);}
+.chip.on{background:var(--ink);color:var(--white);border-color:var(--ink);}
+.chip svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.75;}
+
+/* === [8c] カードヘッドの新UI対応(旧.card-h 維持しつつ .card-head も) === */
+.card-head{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.card-sub{font-size:11.5px;color:var(--ink4);margin-top:2px;}
+
+/* === [8c] クイックアクション(4ボタングリッド) === */
+.quick-acts{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.qa-tile{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px;cursor:pointer;text-align:left;font-family:var(--sans);transition:all .15s;display:flex;flex-direction:column;gap:6px;height:76px;justify-content:space-between;}
+.qa-tile:hover{border-color:var(--indigo);background:var(--indigo-50);}
+.qa-tile-head{display:flex;align-items:center;justify-content:space-between;color:var(--ink3);}
+.qa-tile:hover .qa-tile-head{color:var(--indigo);}
+.qa-tile-head svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;}
+.qa-tile-head svg.arr{width:12px;}
+.qa-tile-label{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.2;}
+.qa-tile-sub{font-size:10.5px;color:var(--ink4);font-weight:500;margin-top:2px;}
+
+/* === [8c] 直近イベントカード(accent color bar) === */
+.ev-tile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.ev-tile{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px 14px 18px;position:relative;cursor:pointer;transition:all .15s;overflow:hidden;}
+.ev-tile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--indigo);}
+.ev-tile.accent-coral::before{background:var(--coral);}
+.ev-tile.accent-green::before{background:var(--green);}
+.ev-tile.accent-amber::before{background:var(--amber);}
+.ev-tile.accent-violet::before{background:var(--violet);}
+.ev-tile.accent-teal::before{background:var(--teal);}
+.ev-tile:hover{border-color:var(--line2);box-shadow:var(--sh-sm);}
+.ev-tile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.ev-tile-name{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;letter-spacing:-0.005em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.ev-tile-date{font-family:var(--mono);font-size:10.5px;color:var(--ink4);margin-bottom:10px;text-transform:uppercase;letter-spacing:.03em;}
+.ev-tile-foot{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--ink3);padding-top:10px;border-top:1px dashed var(--line2);}
+.ev-tile-stat{font-family:var(--mono);}
+.ev-tile-stat strong{color:var(--ink);font-weight:600;}
+
+/* レスポンシブ: 狭い画面でKPI2列化 */
+@media (max-width:1100px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .quick-acts{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:640px){
+  .kpi-grid{grid-template-columns:1fr;}
+  .quick-acts{grid-template-columns:1fr;}
+  .page-head{flex-direction:column;align-items:flex-start;}
+  .ph-left h1{font-size:26px;}
+}
 
 /* [8a] カード・フォーム・バッジ: 新UIベース */
 .card{background:var(--white);border-radius:var(--r);border:1px solid var(--line);box-shadow:var(--sh-xs);overflow:hidden;transition:box-shadow .15s,border-color .15s;}
@@ -332,13 +463,22 @@ tr:hover td{background:var(--indigo-50);}
 /* === RESPONSIVE === */
 @media(max-width:768px){
   .layout{grid-template-columns:1fr;}
-  .sidebar{display:flex;overflow-x:auto;height:auto;padding:8px 0;position:static;border-right:none;border-bottom:1px solid var(--border);}
-  .s-item{white-space:nowrap;padding:8px 14px;border-left:none!important;border-bottom:2px solid transparent;}
-  .s-item.active{border-bottom-color:var(--teal)!important;border-left-color:transparent!important;}
+  .sidebar{display:flex;overflow-x:auto;height:auto;padding:8px 0;position:static;border-right:none;border-bottom:1px solid var(--line);flex-direction:row;gap:0;width:auto;}
+  .s-item{white-space:nowrap;padding:8px 14px;margin:0!important;}
+  .s-item.active::before{display:none;}
+  .s-item.active{border-bottom:2px solid var(--indigo);}
   .s-label{display:none;}
+  .org-switch{display:none;}
   .main{padding:16px;}
   .sch-wrap,.chat-layout{grid-template-columns:1fr;}
   .todo-board{grid-template-columns:1fr;}
+  /* [8b] モバイル時は一部UI非表示 */
+  .cmdk{display:none;}
+  .brand-chip{display:none;}
+  .tb-user > div{display:none;}
+  .tb-user{padding:4px;}
+  .topbar-time{display:none;}
+  .topbar{padding:0 10px;}
 }
 .toast{position:fixed;bottom:24px;right:24px;z-index:999;max-width:340px;}
 
@@ -772,36 +912,75 @@ tr:hover td{background:var(--indigo-50);}
 <!-- APP -->
 <div id="app" class="app">
   <header class="topbar">
-    <div class="topbar-brand" onclick="switchTab('dashboard')">
-      <div class="topbar-logo"></div>
-      <div class="topbar-name">connec<em>+</em>a</div>
+    <div class="tb-left">
+      <div class="topbar-brand" onclick="switchTab('dashboard')">
+        <div class="topbar-logo"></div>
+        <div class="topbar-name">connec<em>+a</em></div>
+        <div class="brand-chip">運営 / ADMIN</div>
+      </div>
+      <!-- [8b] cmdk スタイル検索バー -->
+      <div class="cmdk" onclick="alert('検索機能は未実装(将来対応)')">
+        <svg class="ic ic-sm" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <span>検索 &mdash; イベント、参加者、ドキュメント…</span>
+        <span class="cmdk-kbd"><span class="kbd">⌘</span><span class="kbd">K</span></span>
+      </div>
     </div>
-    <div class="topbar-right">
+    <div class="tb-right">
+      <!-- [8b] 時刻表示(残存) -->
       <span class="topbar-time" id="topbar-time"></span>
-      <button class="topbar-btn" onclick="doLogout()">ログアウト</button>
-      <div class="topbar-avatar" id="topbar-avatar">A</div>
+      <div class="tb-divider"></div>
+      <!-- [8b] アイコンボタン群 -->
+      <button class="tb-btn" title="ヘルプ" onclick="alert('ヘルプ機能は未実装')">
+        <svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+      </button>
+      <button class="tb-btn" title="通知" onclick="switchTab('chat')">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span class="dot" id="tb-notif-dot" style="display:none;"></span>
+      </button>
+      <button class="tb-btn" title="設定" onclick="alert('設定画面は未実装')">
+        <svg class="ic" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+      <div class="tb-divider"></div>
+      <!-- [8b] ユーザブロック -->
+      <div class="tb-user" onclick="doLogout()" title="ログアウト">
+        <div class="avatar" id="topbar-avatar">A</div>
+        <div>
+          <div class="tb-user-name">運営 管理者</div>
+          <div class="tb-user-role">Administrator</div>
+        </div>
+        <svg class="ic ic-sm" viewBox="0 0 24 24" style="color:var(--ink4)"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
     </div>
   </header>
   <div class="layout">
     <nav class="sidebar">
-      <div class="s-label">Overview</div>
+      <!-- [8b] 組織スイッチャー -->
+      <div class="org-switch" onclick="switchTab('orgprofile')" title="団体情報">
+        <div class="org-logo">c</div>
+        <div class="org-info">
+          <div class="org-name">connec+a</div>
+          <div class="org-plan">ADMIN · 運営</div>
+        </div>
+        <svg class="ic ic-sm" viewBox="0 0 24 24" style="color:var(--ink4)"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg>
+      </div>
+      <div class="s-label"><span>Overview</span></div>
       <button class="s-item active" onclick="switchTab('dashboard')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>ダッシュボード</button>
       <button class="s-item" onclick="switchTab('events')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>イベント管理</button>
       <button class="s-item" onclick="switchTab('registrations')"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>登録一覧</button>
       <button class="s-item" onclick="switchTab('participants')"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.87"/></svg>参加者</button>
       <button class="s-item" onclick="switchTab('qrscan')"><svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 011-1h2M4 17v2a1 1 0 001 1h2M20 7V5a1 1 0 00-1-1h-2M20 17v2a1 1 0 01-1 1h-2"/><rect x="7" y="7" width="4" height="4" rx=".5"/><rect x="13" y="7" width="4" height="4" rx=".5"/><rect x="7" y="13" width="4" height="4" rx=".5"/></svg>QR照会</button>
-      <div class="s-label">Communication</div>
+      <div class="s-label"><span>Communication</span></div>
       <button class="s-item" onclick="switchTab('mail')"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 7 10-7"/></svg>メール</button>
       <button class="s-item" onclick="switchTab('news')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>ニュース</button>
       <button class="s-item" onclick="switchTab('templates')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>定型文</button>
       <button class="s-item" onclick="switchTab('chat')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>チャット<span class="s-badge" id="chat-badge" style="display:none">0</span></button>
-      <div class="s-label">Planning</div>
+      <div class="s-label"><span>Planning</span></div>
       <button class="s-item" onclick="switchTab('schedule')"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>スケジュール</button>
       <button class="s-item" onclick="switchTab('todo')"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Todo</button>
-      <div class="s-label">Content</div>
+      <div class="s-label"><span>Content</span></div>
       <button class="s-item" onclick="switchTab('photos')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>写真</button>
       <button class="s-item" onclick="switchTab('survey')"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>満足度</button>
-      <div class="s-label">Settings</div>
+      <div class="s-label"><span>Settings</span></div>
       <button class="s-item" onclick="switchTab('departments')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>部署管理</button>
       <button class="s-item" onclick="switchTab('orgprofile')"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>団体紹介</button>
       <button class="s-item" onclick="switchTab('ads')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>広告管理</button>
@@ -810,8 +989,9 @@ tr:hover td{background:var(--indigo-50);}
 
       <!-- DASHBOARD -->
       <div id="pg-dashboard" class="page active">
-        <div class="page-header"><div class="page-title">ダッシュボード</div><div class="page-actions"><span class="updated-label" id="dash-updated"></span><button class="btn btn-outline btn-sm" onclick="loadDashboard()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>更新</button></div></div>
+        <!-- [8c] 新UIスタイル: loadDashboard内でpage-headを生成するため、ここは空 -->
         <div id="dashboard-area"><div class="spinner"></div></div>
+        <div style="margin-top:16px;text-align:right;"><span class="updated-label" id="dash-updated" style="margin-right:10px;"></span><button class="btn btn-ghost btn-sm" onclick="loadDashboard()"><svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke-width:1.75;stroke:currentColor;fill:none;"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>更新</button></div>
       </div>
 
       <!-- EVENTS -->
@@ -2090,38 +2270,192 @@ function startAutoRefresh(){if(autoTimer)clearInterval(autoTimer);autoTimer=setI
 
 // === DASHBOARD ===
 var charts={};
+// [8c] SVGスパークラインを描画(14データポイントからpath生成)
+function renderSparkSVG(data, color){
+  if(!data || !data.length) return '';
+  color = color || 'var(--indigo)';
+  var w = 100, h = 32;
+  var max = Math.max.apply(null, data);
+  var min = Math.min.apply(null, data);
+  var range = (max - min) || 1;
+  var step = w / (data.length - 1 || 1);
+  var pts = data.map(function(v, i){
+    var x = i * step;
+    var y = h - 2 - ((v - min) / range) * (h - 4);
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  });
+  var pathLine = 'M' + pts.join(' L');
+  var pathFill = pathLine + ' L' + w + ',' + h + ' L0,' + h + ' Z';
+  return '<svg class="kpi-spark" viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' +
+    '<defs><linearGradient id="spg-' + Math.random().toString(36).slice(2,6) + '" x1="0" x2="0" y1="0" y2="1">' +
+    '<stop offset="0%" stop-color="' + color + '" stop-opacity="0.25"/>' +
+    '<stop offset="100%" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+    '<path d="' + pathFill + '" fill="' + color + '" fill-opacity="0.12"/>' +
+    '<path d="' + pathLine + '" fill="none" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '</svg>';
+}
+
+// [8c] 日付をアクセント色にマッピング(曜日ベース)
+function pickEventAccent(dateStr){
+  try {
+    var d = new Date(dateStr);
+    var day = d.getDay();
+    var accents = ['indigo','coral','green','amber','violet','teal','indigo'];
+    return accents[day] || 'indigo';
+  } catch(e){ return 'indigo'; }
+}
+
+// [8c] デルタ(前月比)のバッジHTML
+function buildDeltaBadge(delta, isPercent){
+  if(delta === null || delta === undefined || isNaN(delta)){
+    return '<div class="kpi-delta flat">— <span class="suffix">vs 先月</span></div>';
+  }
+  var up = delta > 0, dn = delta < 0;
+  var cls = up ? 'up' : (dn ? 'dn' : 'flat');
+  var arrow = up ? '<svg viewBox="0 0 24 24"><polyline points="17 6 17 18 5 18"/><polyline points="17 6 5 18"/></svg>' :
+             dn ? '<svg viewBox="0 0 24 24"><polyline points="17 18 17 6 5 6"/><polyline points="17 18 5 6"/></svg>' : '';
+  var sign = up ? '+' : '';
+  var unit = isPercent ? '%' : 'pt';
+  return '<div class="kpi-delta ' + cls + '">' + arrow + sign + delta + unit + '<span class="suffix">vs 先月</span></div>';
+}
+
 async function loadDashboard(){
   const a = document.getElementById('dashboard-area');
   if(!a) return;
   a.innerHTML = '<div class="spinner"></div>';
-
-  // charts の存在を保証(防御)
   if(typeof charts === 'undefined' || charts === null){ charts = {}; }
 
   try {
-    const s = await api('getStats');
+    // 新UIはKPI専用API、既存はgetStats。両方並列取得
+    var k, s;
+    try {
+      k = await api('getDashboardKPIs', {});
+    } catch(e){
+      console.warn('[loadDashboard] getDashboardKPIs失敗、getStatsにフォールバック:', e);
+      k = null;
+    }
+    s = await api('getStats');
     if(!s){ throw new Error('getStats returned no data'); }
-
     const es = Array.isArray(s.eventStats) ? s.eventStats : [];
 
-    // 統計カード
-    var h = '<div class="stat-grid">' +
-      '<div class="stat-card"><div class="stat-card-icon" style="background:var(--teal-light);color:var(--teal);"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div class="stat-num">' + (s.openEvents || es.length) + '</div><div class="stat-label">イベント</div></div>' +
-      '<div class="stat-card"><div class="stat-card-icon" style="background:var(--purple-light);color:var(--purple);"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg></div><div class="stat-num">' + (s.totalParticipants || s.participants || 0) + '</div><div class="stat-label">参加者数</div></div>' +
-      '<div class="stat-card"><div class="stat-card-icon" style="background:var(--amber-light);color:#b07800;"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div><div class="stat-num">' + (s.totalRegistrations || 0) + '</div><div class="stat-label">総登録数</div></div>' +
-      '<div class="stat-card"><div class="stat-card-icon" style="background:var(--green-light);color:var(--green);"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div><div class="stat-num">' + es.reduce(function(x, e){ return x + (Number(e.checkinCount) || 0); }, 0) + '</div><div class="stat-label">チェックイン</div></div>' +
-      '</div>';
+    // === [8c] 挨拶タイトル + ブレッドクラム ===
+    var now = new Date();
+    var greeting = '';
+    var hr = now.getHours();
+    if(hr < 11) greeting = 'おはようございます';
+    else if(hr < 18) greeting = 'こんにちは';
+    else greeting = 'こんばんは';
+    var weekCount = (k && k.weekEventCount) || 0;
 
-    // Charts コンテナ
+    var h = '<div class="page-head">' +
+      '<div class="ph-left">' +
+        '<div class="ph-crumbs"><span>運営</span><span class="sep">/</span><span style="color:var(--ink2)">ダッシュボード</span></div>' +
+        '<h1>' + greeting + '<i>.</i></h1>' +
+        '<div class="ph-sub">今週は <b style="color:var(--ink)">' + weekCount + '件</b> のイベントが予定されています。最新の申込状況を確認しましょう。</div>' +
+      '</div>' +
+      '<div class="ph-right">' +
+        '<div class="chip"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>過去14日</div>' +
+        '<button class="btn btn-primary btn-sm" onclick="openCreateEventModal()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>イベント作成</button>' +
+      '</div>' +
+    '</div>';
+
+    // === [8c] KPIタイル ===
+    var kThisReg = (k && k.thisMonthReg) || 0;
+    var kRegDelta = k ? k.regDelta : null;
+    var kTotalParts = (k && k.totalParticipants) || (s.totalParticipants || 0);
+    var kPartDelta = k ? k.partDelta : null;
+    var kAttRate = (k && k.attendanceRate) || 0;
+    var kAttDelta = k ? k.attDelta : null;
+    var kNewParts = (k && k.thisMonthNewParticipants) || 0;
+    var sparkReg = (k && k.sparkReg) || [];
+    var sparkCheckin = (k && k.sparkCheckin) || [];
+
+    h += '<div class="kpi-grid">';
+    // 1. 今月の申込
+    h += '<div class="kpi">' +
+      '<div class="kpi-label"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-5 5"/></svg>今月の申込</div>' +
+      '<div class="kpi-value">' + kThisReg + '<span class="unit">件</span></div>' +
+      buildDeltaBadge(kRegDelta, true) +
+      renderSparkSVG(sparkReg, 'var(--indigo)') +
+    '</div>';
+    // 2. 参加者数
+    h += '<div class="kpi">' +
+      '<div class="kpi-label"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg>参加者数</div>' +
+      '<div class="kpi-value">' + kTotalParts + '<span class="unit">人</span></div>' +
+      buildDeltaBadge(kPartDelta, true) +
+      '<div style="margin-top:12px;font-size:11px;color:var(--ink4);font-family:var(--mono);">今月新規 +' + kNewParts + '</div>' +
+    '</div>';
+    // 3. 出席率
+    h += '<div class="kpi">' +
+      '<div class="kpi-label"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>出席率</div>' +
+      '<div class="kpi-value">' + kAttRate.toFixed(1) + '<span class="unit">%</span></div>' +
+      buildDeltaBadge(kAttDelta, false) +
+      renderSparkSVG(sparkCheckin, 'var(--green)') +
+    '</div>';
+    // 4. 今週のイベント
+    h += '<div class="kpi">' +
+      '<div class="kpi-label"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>今週のイベント</div>' +
+      '<div class="kpi-value">' + weekCount + '<span class="unit">件</span></div>' +
+      '<div class="kpi-delta flat">予定</div>' +
+      '<div style="margin-top:12px;font-size:11px;color:var(--ink4);font-family:var(--mono);">総イベント ' + es.length + ' 件</div>' +
+    '</div>';
+    h += '</div>';
+
+    // === [8c] クイックアクション ===
+    h += '<div class="quick-acts">' +
+      '<button class="qa-tile" onclick="openCreateEventModal()">' +
+        '<div class="qa-tile-head"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><svg class="arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>' +
+        '<div><div class="qa-tile-label">イベント作成</div><div class="qa-tile-sub">新規登録</div></div>' +
+      '</button>' +
+      '<button class="qa-tile" onclick="switchTab(\'mail\')">' +
+        '<div class="qa-tile-head"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 7 10-7"/></svg><svg class="arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>' +
+        '<div><div class="qa-tile-label">メール送信</div><div class="qa-tile-sub">一斉配信</div></div>' +
+      '</button>' +
+      '<button class="qa-tile" onclick="switchTab(\'qrscan\')">' +
+        '<div class="qa-tile-head"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h7v7h-7z"/></svg><svg class="arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>' +
+        '<div><div class="qa-tile-label">QR照会</div><div class="qa-tile-sub">チェックイン</div></div>' +
+      '</button>' +
+      '<button class="qa-tile" onclick="switchTab(\'news\')">' +
+        '<div class="qa-tile-head"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg><svg class="arr" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>' +
+        '<div><div class="qa-tile-label">ニュース投稿</div><div class="qa-tile-sub">お知らせ配信</div></div>' +
+      '</button>' +
+    '</div>';
+
+    // === [8c] 直近イベントカード ===
+    var upcoming = (k && k.upcomingEvents) || [];
+    if(upcoming.length){
+      h += '<div class="card" style="margin-bottom:16px;">' +
+        '<div class="card-head"><div><div class="card-title"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:1.75;stroke:currentColor;fill:none;"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>直近のイベント</div><div class="card-sub">今後4件</div></div>' +
+        '<button class="btn btn-ghost btn-sm" onclick="switchTab(\'events\')">全て見る →</button></div>' +
+        '<div class="card-body">' +
+        '<div class="ev-tile-grid">' +
+        upcoming.map(function(ev){
+          var accent = pickEventAccent(ev.Date);
+          var dateDisp = ev.Date ? String(ev.Date).substring(0, 10) : '';
+          var timeDisp = ev.Time ? (' · ' + ev.Time) : '';
+          var cap = Number(ev.Capacity) || 0;
+          return '<div class="ev-tile accent-' + accent + '" onclick="editEvent(\'' + esc(ev.EventID) + '\')">' +
+            '<div class="ev-tile-date">' + esc(dateDisp) + timeDisp + '</div>' +
+            '<div class="ev-tile-head"><div class="ev-tile-name">' + esc(ev.EventName || '—') + '</div></div>' +
+            '<div class="ev-tile-foot">' +
+              '<span class="ev-tile-stat"><strong>' + ev.registrationCount + '</strong>/' + cap + '</span>' +
+              '<span>' + (ev.Location || '会場未設定') + '</span>' +
+            '</div>' +
+          '</div>';
+        }).join('') +
+        '</div></div></div>';
+    }
+
+    // === 既存のCharts セクション(下部に残す) ===
     h += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">' +
-      '<div class="card"><div class="card-h"><div class="card-title"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>イベント別</div></div><div class="card-body"><div class="chart-wrap"><canvas id="c-ev"></canvas></div></div></div>' +
-      '<div class="card"><div class="card-h"><div class="card-title"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>流入経路</div></div><div class="card-body"><div class="chart-wrap"><canvas id="c-ref"></canvas></div></div></div>' +
+      '<div class="card"><div class="card-head"><div class="card-title"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:1.75;stroke:currentColor;fill:none;"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>イベント別 申込/入場</div></div><div class="card-body"><div class="chart-wrap"><canvas id="c-ev"></canvas></div></div></div>' +
+      '<div class="card"><div class="card-head"><div class="card-title"><svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke-width:1.75;stroke:currentColor;fill:none;"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10"/><line x1="2" y1="12" x2="22" y2="12"/></svg>流入経路</div></div><div class="card-body"><div class="chart-wrap"><canvas id="c-ref"></canvas></div></div></div>' +
       '</div>';
 
-    // Event table
-    h += '<div class="card" style="margin-top:16px;"><div class="card-h"><div class="card-title">イベント一覧</div></div><div class="card-body"><div class="table-wrap"><table><thead><tr><th>イベント</th><th>日時</th><th>定員</th><th>登録</th><th>入場</th></tr></thead><tbody>' +
+    // === イベント一覧テーブル ===
+    h += '<div class="card" style="margin-top:16px;"><div class="card-head"><div class="card-title">イベント一覧</div></div><div class="card-body"><div class="table-wrap"><table><thead><tr><th>イベント</th><th>日時</th><th>定員</th><th>登録</th><th>入場</th></tr></thead><tbody>' +
       es.map(function(e){
-        return '<tr><td><strong>' + esc(e.EventName) + '</strong></td><td>' + esc(e.Date) + '</td><td>' + esc(e.Capacity) + '</td><td>' + esc(e.registrationCount) + '</td><td>' + esc(e.checkinCount) + '</td></tr>';
+        return '<tr onclick="editEvent(\'' + esc(e.EventID) + '\')" style="cursor:pointer;"><td><strong>' + esc(e.EventName) + '</strong></td><td>' + esc(e.Date) + '</td><td>' + esc(e.Capacity) + '</td><td>' + esc(e.registrationCount) + '</td><td>' + esc(e.checkinCount) + '</td></tr>';
       }).join('') +
       '</tbody></table></div></div></div>';
 
@@ -2138,8 +2472,8 @@ async function loadDashboard(){
             data: {
               labels: es.map(function(e){ return (e.EventName || '').length > 12 ? e.EventName.slice(0, 12) + '…' : (e.EventName || ''); }),
               datasets: [
-                { label: '登録', data: es.map(function(e){ return Number(e.registrationCount) || 0; }), backgroundColor: 'rgba(0,133,124,.6)', borderRadius: 6 },
-                { label: '入場', data: es.map(function(e){ return Number(e.checkinCount) || 0; }), backgroundColor: 'rgba(45,157,78,.5)', borderRadius: 6 }
+                { label: '登録', data: es.map(function(e){ return Number(e.registrationCount) || 0; }), backgroundColor: 'rgba(68,71,163,.65)', borderRadius: 6 },
+                { label: '入場', data: es.map(function(e){ return Number(e.checkinCount) || 0; }), backgroundColor: 'rgba(237,106,90,.55)', borderRadius: 6 }
               ]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 11 } } } }, scales: { y: { beginAtZero: true } } }
@@ -2169,7 +2503,7 @@ async function loadDashboard(){
           if(charts.ref){ try { charts.ref.destroy(); } catch(e){} }
           charts.ref = new Chart(ctx, {
             type: 'doughnut',
-            data: { labels: labels, datasets: [{ data: vals, backgroundColor: ['rgba(237,106,90,.7)', 'rgba(0,133,124,.7)', 'rgba(61,90,241,.7)', 'rgba(244,167,38,.7)', 'rgba(124,92,252,.7)', 'rgba(45,157,78,.7)'], borderWidth: 0 }] },
+            data: { labels: labels, datasets: [{ data: vals, backgroundColor: ['rgba(237,106,90,.7)', 'rgba(68,71,163,.7)', 'rgba(45,157,78,.7)', 'rgba(204,140,34,.7)', 'rgba(124,92,252,.7)', 'rgba(57,120,130,.7)'], borderWidth: 0 }] },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { usePointStyle: true, font: { size: 11 } } } } }
           });
         }
@@ -5256,11 +5590,19 @@ var chatMessagesCache = {}; // pid → messages[] のキャッシュ(現スレ�
 function updateChatBadge(){
   // 全スレッドの未読数合計
   var totalUnread = 0;
-  chatThreadsCache.forEach(function(th){ totalUnread += (th.unread || 0); });
+  if(chatThreadsCache && chatThreadsCache.length){
+    chatThreadsCache.forEach(function(th){ totalUnread += (th.unread || 0); });
+  }
+  // サイドバーのチャットバッジ
   var b = document.getElementById('chat-badge');
   if(b){
     b.style.display = totalUnread > 0 ? 'inline-block' : 'none';
     b.textContent = totalUnread;
+  }
+  // [8b] トップバーの通知ドット
+  var dot = document.getElementById('tb-notif-dot');
+  if(dot){
+    dot.style.display = totalUnread > 0 ? 'block' : 'none';
   }
 }
 
